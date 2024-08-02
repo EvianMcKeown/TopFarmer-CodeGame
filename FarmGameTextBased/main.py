@@ -3,7 +3,7 @@
 # 2 August 2024
 
 from time import sleep
-from Farm import *
+from farm import *
 
 def main():
     fg = FarmGrid(10, 10)
