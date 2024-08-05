@@ -2,6 +2,7 @@
 # By Mustafa Mohamed
 # 2 August 2024
 
+import sys
 from time import sleep
 from farm import *
 
@@ -14,8 +15,12 @@ def main():
         instructions = input("Enter intructions: ").lower().split()
         for ins in instructions:
             match ins:
-                case "up" | "down" | "left" | "right":
-                    fg.farmer.move(ins)
+                case "up" | "down" | "left" | "right" | "u" | "d" | "l" | "r":
+                    fg.farmer.move(ins[0])
+                case "plant" | "p":
+                    fg.farmer.plant()
+                case "harvest" | "h":
+                    fg.farmer.harvest()
                 case "exit":
                     sys.exit(0)
                 case _:
