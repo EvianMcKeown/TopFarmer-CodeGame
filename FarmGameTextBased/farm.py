@@ -15,15 +15,21 @@ class Farmer:
     def get_pos(self):
         return (self.x, self.y)
     def move(self, direction):
+        '''Move to a non-obstacle tile next to the farmer'''
         if direction == "u" and self.farm.grid[self.x][self.y-1].tile_type < 2:
             self.y -= 1
+            return
         if direction == "d" and self.farm.grid[self.x][self.y+1].tile_type < 2:
             self.y += 1
+            return
         if direction == "l" and self.farm.grid[self.x-1][self.y].tile_type < 2:
             self.x -= 1
+            return
         if direction == "r" and self.farm.grid[self.x+1][self.y].tile_type < 2:
             self.x += 1
+            return
     def plant(self, direction):
+        '''Plant a crop on a dirt tile next to the farmer'''
         if direction == "u" and self.farm.grid[self.x][self.y-1].tile_type == 0:
             self.farm.grid[self.x][self.y-1].tile_type = 3
             return
@@ -37,6 +43,7 @@ class Farmer:
             self.farm.grid[self.x+1][self.y].tile_type = 3
             return
     def harvest(self, direction):
+        ''' Harvest a crop from a crop tile next to the farmer'''
         if direction == "u" and self.farm.grid[self.x][self.y-1].tile_type == 3:
             self.farm.grid[self.x][self.y-1].tile_type = 0
             return
@@ -71,7 +78,7 @@ class FarmGrid:
         self.generate_farm()
 
     def generate_farm(self):
-        # Initialise empty grid and populate it with tiles
+        '''Generates dirt farm with river and bridge'''
         self.grid = [[None for _ in range(self.height)] for _ in range(self.width)]
         bridge_location = random.randrange(1, self.width - 1)
         for y in range(self.height):
@@ -86,7 +93,7 @@ class FarmGrid:
                         self.grid[x][y] = FarmTile(x, y, 0)
 
     def __str__(self):
-        # Returns a string with information about the farm
+        '''Returns a string representation of the farm'''
         farmer_x, farmer_y = self.farmer.get_pos()
         string = "width={}, height={}\n".format(self.width, self.height)
         string += "farmer_position={}\n".format((farmer_x, farmer_y))
