@@ -23,12 +23,33 @@ class Farmer:
             self.x -= 1
         if direction == "r" and self.farm.grid[self.x+1][self.y].tile_type < 2:
             self.x += 1
-    def plant(self):
-        if self.farm.grid[self.x][self.y].tile_type == 0:
-            self.farm.grid[self.x][self.y].tile_type = 3
-    def harvest(self):
-        if self.farm.grid[self.x][self.y].tile_type == 3:
-            self.farm.grid[self.x][self.y].tile_type = 0
+    def plant(self, direction):
+        if direction == "u" and self.farm.grid[self.x][self.y-1].tile_type == 0:
+            self.farm.grid[self.x][self.y-1].tile_type = 3
+            return
+        if direction == "d" and self.farm.grid[self.x][self.y+1].tile_type == 0:
+            self.farm.grid[self.x][self.y+1].tile_type = 3
+            return
+        if direction == "l" and self.farm.grid[self.x-1][self.y].tile_type == 0:
+            self.farm.grid[self.x-1][self.y].tile_type = 3
+            return
+        if direction == "r" and self.farm.grid[self.x+1][self.y].tile_type == 0:
+            self.farm.grid[self.x+1][self.y].tile_type = 3
+            return
+    def harvest(self, direction):
+        if direction == "u" and self.farm.grid[self.x][self.y-1].tile_type == 3:
+            self.farm.grid[self.x][self.y-1].tile_type = 0
+            return
+        if direction == "d" and self.farm.grid[self.x][self.y+1].tile_type == 3:
+            self.farm.grid[self.x][self.y+1].tile_type = 0
+            return
+        if direction == "l" and self.farm.grid[self.x-1][self.y].tile_type == 3:
+            self.farm.grid[self.x-1][self.y].tile_type = 0
+            return
+        if direction == "r" and self.farm.grid[self.x+1][self.y].tile_type == 3:
+            self.farm.grid[self.x+1][self.y].tile_type = 0
+            return
+
 
 class FarmTile:
     tile_desc = {0:"dirt",1:"grass",2:"water",3:"crop"}
@@ -55,8 +76,8 @@ class FarmGrid:
         bridge_location = random.randrange(1, self.width - 1)
         for y in range(self.height):
             for x in range(self.width):
+                # Start with dirt
                 self.grid[x][y] = FarmTile(x, y, 0)
-
                 # Place river half way through farm height
                 if y == int(self.height / 2):
                     self.grid[x][y] = FarmTile(x, y, 2)
@@ -83,7 +104,7 @@ class FarmGrid:
             string += "The farmer fell off the farm. He is dead.\n"
         return string
 
-    def display(self):
+    def print(self):
         print(self)
 
     def add_farmer(self, x=0, y=0):
