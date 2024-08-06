@@ -1,0 +1,6 @@
+Simple Case
+	Array A:
+	- read in user code (exec func, pass string with dictionary to replace user code with correct vars, etc.)
+			> can use game engine, or code simple engine
+			
+	Alternative: Use SQL instead of array...
