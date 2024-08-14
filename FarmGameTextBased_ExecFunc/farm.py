@@ -33,22 +33,23 @@ class Farmer:
     def move(self, direction):
         '''Move to a non-obstacle tile next to the farmer'''
         dest = {
-            'u': (self.x, self.y - 1),
-            'd': (self.x, self.y + 1),
-            'l': (self.x - 1, self.y),
-            'r': (self.x + 1, self.y)
+            'up': (self.x, self.y - 1),
+            'down': (self.x, self.y + 1),
+            'left': (self.x - 1, self.y),
+            'right': (self.x + 1, self.y)
         }.get(direction, self.get_pos())
         
         if self.farm.walkable(dest) and not self.farm.out_of_bounds(dest):
             self.x, self.y = dest
 
-    def plant(self, direction, crop):
+    def plant(self, crop, direction):
         '''Plant a crop on a dirt tile next to the farmer'''
+        crop = {v: k for k, v in self.crop_desc.items()}.get(crop)
         dest = {
-            'u': (self.x, self.y - 1),
-            'd': (self.x, self.y + 1),
-            'l': (self.x - 1, self.y),
-            'r': (self.x + 1, self.y)
+            'up': (self.x, self.y - 1),
+            'down': (self.x, self.y + 1),
+            'left': (self.x - 1, self.y),
+            'right': (self.x + 1, self.y)
         }.get(direction, self.get_pos())
         
         if self.farm.grid[dest[0]][dest[1]].tile_type == 0 and crop in self.inventory:
@@ -58,10 +59,10 @@ class Farmer:
     def harvest(self, direction):
         '''Harvest a crop from a crop tile next to the farmer'''
         dest = {
-            'u': (self.x, self.y - 1),
-            'd': (self.x, self.y + 1),
-            'l': (self.x - 1, self.y),
-            'r': (self.x + 1, self.y)
+            'up': (self.x, self.y - 1),
+            'down': (self.x, self.y + 1),
+            'left': (self.x - 1, self.y),
+            'right': (self.x + 1, self.y)
         }.get(direction, self.get_pos())
         
         if self.farm.grid[dest[0]][dest[1]].tile_type == 3:
