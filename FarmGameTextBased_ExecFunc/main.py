@@ -6,11 +6,13 @@
 import pygame
 import sys
 import time
+import tkinter
 from farm import FarmGrid  
 
 #color constants
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+YELLOW = (255, 255, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
@@ -102,6 +104,11 @@ def render_button_reset():
     pygame.draw.rect(surface, RED, pygame.Rect(SCALE_FACTOR * 4, SCREEN_HEIGHT - SCALE_FACTOR, BUTTON_WIDTH, BUTTON_HEIGHT))
     surface.blit(text_image, (47*SCREEN_WIDTH*0.005, (SCREEN_HEIGHT - SCALE_FACTOR)*1.04))
 
+def render_button_help():
+    text_image = pygame.font.SysFont(None, int(SCALE_FACTOR / 2)).render("HELP", True, BLACK)
+    pygame.draw.rect(surface, YELLOW, pygame.Rect(SCALE_FACTOR * 6, SCREEN_HEIGHT - SCALE_FACTOR, BUTTON_WIDTH, BUTTON_HEIGHT))
+    surface.blit(text_image, (73*SCREEN_WIDTH*0.005, (SCREEN_HEIGHT - SCALE_FACTOR)*1.04))
+
 def render_inventory():
     text_image = pygame.font.SysFont(None, int(SCALE_FACTOR / 2)).render(str(farm.farmer.get_inventory()), True, BLACK)
     pygame.draw.rect(surface, WHITE, pygame.Rect(0, 0, SIDE_WIDTH, BUTTON_HEIGHT))
@@ -137,6 +144,20 @@ def handle_button_reset():
     cursor_x = 0
     cursor_y = 0
 
+def handle_button_help():
+    message = "Move the farmer: farm.farmer.move(\"direction\")\n"
+    message +="direction can be left, right, up, down\n\n"
+    message +="Plant a crop: farm.farmer.plant(\"crop\", \"direction\")\n"
+    message +="crop can be potato, carrop, pumpkin\n\n"
+    message +="Harvest a crop: farm.farmer.harvest(\"direction\")\n\n"
+    root = tkinter.Tk()
+    root.geometry("400x200")
+    w = tkinter.Label(root, text ='How to play', font = "50")  
+    w.pack() 
+    msg = tkinter.Message(root, text=message, width=600)   
+    msg.pack()
+    root.mainloop()  
+
 def render_all():
     render_farm()
     draw_grid(surface, SCREEN_WIDTH, SCREEN_HEIGHT, SCALE_FACTOR)
@@ -144,6 +165,7 @@ def render_all():
     render_button_run()
     render_button_clear()
     render_button_reset()
+    render_button_help()
     render_inventory()
     pygame.display.flip()
 
@@ -223,6 +245,8 @@ while running:
                 handle_button_clear()
             if SCALE_FACTOR*4 <= mouse[0] <= SCALE_FACTOR*6 and SCREEN_HEIGHT - SCALE_FACTOR <= mouse[1] <= SCREEN_HEIGHT:
                 handle_button_reset()
+            if SCALE_FACTOR*6 <= mouse[0] <= SCALE_FACTOR*8 and SCREEN_HEIGHT - SCALE_FACTOR <= mouse[1] <= SCREEN_HEIGHT:
+                handle_button_help()
         
         render_all()
 pygame.quit()
