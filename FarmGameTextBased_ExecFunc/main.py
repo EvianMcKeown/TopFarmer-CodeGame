@@ -142,7 +142,12 @@ def handle_button_run():
         for line in user_input_list:
             final_user_input += line + '\n'
             if line[-1] != ':':
-                final_user_input += "    render_all()\n    time.sleep(1)\n"
+                if line[:4] == "    ":
+                    final_user_input += "    "
+                final_user_input += "render_all()\n"
+                if line[:4] == "    ":
+                    final_user_input += "    "
+                final_user_input += "time.sleep(1)\n"
         print(final_user_input)
         execute_python_code(final_user_input)
             #render_all()
@@ -249,10 +254,25 @@ def handle_key_press(event):
             text_lines[cursor_y] = line[:cursor_x] + event.unicode + line[cursor_x:]
             cursor_x += 1
 
+def play_music(type):
+    if type=="theme":
+        #pygame.mixer.music.load("./FarmGameTextBased_ExecFunc/resources/Capstone-CodeGame.mp3")
+        pygame.mixer.music.load("./FarmGameTextBased_ExecFunc/resources/CodeGameTest.mp3")
+        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.play(0, 0, 5000)
+        pygame.mixer.music.fadeout(5)
+        pygame.mixer.music.unload()
+        pygame.mixer.music.load("./FarmGameTextBased_ExecFunc/resources/Capstone-CodeGame.mp3")
+        pygame.mixer.music.play(0, 0, 5000)    
+
 # Main loop
 running = True
+play_music("theme")
 while running:
     for event in pygame.event.get():
+        if not pygame.mixer.music.get_busy():
+            play_music("theme")       
+  
         if event.type == pygame.QUIT:
             running = False
         
