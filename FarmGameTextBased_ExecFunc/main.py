@@ -127,7 +127,7 @@ def render_inventory():
 
 def execute_python_code(code):
     try:
-        exec(code, {'farm': farm, 'print': print})
+        exec(code, {'farm': farm, 'print': print}, globals())
     except Exception as e:
         print(f"Error: {e}")
 
@@ -138,11 +138,16 @@ def handle_button_run():
     if user_input:
         # split by lines '\n', so that every line is show as it is executed
         user_input_list = user_input.split("\n")
+        final_user_input = ""
         for line in user_input_list:
-            execute_python_code(line)
-            render_all()
-            print(farm)
-            time.sleep(1)
+            final_user_input += line + '\n'
+            if line[-1] != ':':
+                final_user_input += "    render_all()\n    time.sleep(1)\n"
+        print(final_user_input)
+        execute_python_code(final_user_input)
+            #render_all()
+            #print(farm)
+            #time.sleep(1)
     #render_all()
     #print(farm)
     #time.sleep(1)
