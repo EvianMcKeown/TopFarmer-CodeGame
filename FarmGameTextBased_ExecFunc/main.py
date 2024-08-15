@@ -37,6 +37,9 @@ BUTTON_HEIGHT = SCALE_FACTOR * 1
 SCREEN_WIDTH = FARM_WIDTH * SCALE_FACTOR + SIDE_WIDTH
 SCREEN_HEIGHT = FARM_HEIGHT * SCALE_FACTOR
 
+#keypress repeating
+pygame.key.set_repeat(400, 100)
+
 # Initialize farm with farmer  
 farm = FarmGrid(FARM_WIDTH, FARM_HEIGHT)
 farm.add_farmer()
@@ -185,8 +188,6 @@ def render_all():
 
 def handle_key_press(event):
     global cursor_x, cursor_y, text_lines
-
-    pygame.key.set_repeat(400, 100)
     
     if event.key == pygame.K_BACKSPACE:
         line = text_lines[cursor_y]
