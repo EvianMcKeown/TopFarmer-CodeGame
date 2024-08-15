@@ -9,6 +9,7 @@ import time
 import tkinter
 from farm import FarmGrid  
 from sprites import *
+import code as cd
 
 #color constants
 BLACK = (0, 0, 0)
@@ -48,6 +49,10 @@ surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 #keypress repeating
 pygame.key.set_repeat(400, 50)
+
+# python interpreter
+x = 0
+interp = cd.InteractiveConsole({'farm': farm, 'print': print, 'x': x})
 
 
 user_input = "" 
@@ -127,7 +132,11 @@ def render_inventory():
 
 def execute_python_code(code):
     try:
-        exec(code, {'farm': farm, 'print': print})
+        x = 0
+        #exec(code, {'farm': farm, 'print': print, 'x': x})
+        #interp = cd.InteractiveConsole({'farm': farm, 'print': print, 'x': x})
+        #compiled_code = cd.compile_command(code)
+        interp.runcode(code)
     except Exception as e:
         print(f"Error: {e}")
 
@@ -135,9 +144,13 @@ def handle_button_run():
     global user_input
     user_input = "\n".join(text_lines)
     user_input = user_input.strip()
+    user_input = user_input.replace(":\n", ":;    ")
     if user_input:
         # split by lines '\n', so that every line is show as it is executed
         user_input_list = user_input.split("\n")
+        for x in range(len(user_input_list)):
+            user_input_list[x] = user_input_list[x].replace(";", "\n")
+        
         for line in user_input_list:
             execute_python_code(line)
             render_all()
