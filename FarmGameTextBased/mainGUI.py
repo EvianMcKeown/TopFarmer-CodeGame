@@ -1,6 +1,7 @@
 import sys
 import time
 import pygame
+from pygame.locals import *
 import farm
 from colors import *
 from sprites import *
@@ -25,7 +26,7 @@ farm.add_farmer()
 # initialise pygame
 pygame.init()
 pygame.display.set_caption("TopFarmer")
-surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), DOUBLEBUF | RESIZABLE)
 clock = pygame.time.Clock()
 
 user_input = "" # the list of instructions to control the farmer
@@ -63,8 +64,10 @@ def render_farm():
                 color = RED
             pygame.draw.rect(surface, color, pygame.Rect(x*SCALE_FACTOR + SIDE_WIDTH, y*SCALE_FACTOR, SCALE_FACTOR, SCALE_FACTOR))
             if color == POTATO:
+                # scale image
+                potato2 = pygame.transform.scale(potato1, (SCALE_FACTOR,SCALE_FACTOR))
                 # then draw sprite
-                surface.blit(potato1, (x*SCALE_FACTOR + SIDE_WIDTH,y*SCALE_FACTOR, SCALE_FACTOR, SCALE_FACTOR))
+                surface.blit(potato2, (x*SCALE_FACTOR + SIDE_WIDTH,y*SCALE_FACTOR, SCALE_FACTOR, SCALE_FACTOR))
             #pygame.display.flip()
 
 def render_text_input(text):
