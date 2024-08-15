@@ -8,6 +8,7 @@ import sys
 import time
 import tkinter
 from farm import FarmGrid  
+from sprites import *
 
 #color constants
 BLACK = (0, 0, 0)
@@ -76,6 +77,13 @@ def render_farm():
                 color = RED
             pygame.draw.rect(surface, color, pygame.Rect(x*SCALE_FACTOR + SIDE_WIDTH, y*SCALE_FACTOR, SCALE_FACTOR, SCALE_FACTOR))
 
+            # draw sprites on top of square
+            if color == POTATO:
+                # scale image
+                potato2 = pygame.transform.scale(potato1, (SCALE_FACTOR,SCALE_FACTOR))
+                # then draw sprite
+                surface.blit(potato2, (x*SCALE_FACTOR + SIDE_WIDTH,y*SCALE_FACTOR, SCALE_FACTOR, SCALE_FACTOR))
+
 def render_text_input():
     pygame.draw.rect(surface, BLACK, pygame.Rect(0, 0, SIDE_WIDTH, SCREEN_HEIGHT))
     y_offset = SCALE_FACTOR
@@ -125,10 +133,16 @@ def handle_button_run():
     user_input = "\n".join(text_lines)
     user_input = user_input.strip()
     if user_input:
-        execute_python_code(user_input)
-    render_all()
-    print(farm)
-    time.sleep(1)
+        # split by lines '\n', so that every line is show as it is executed
+        user_input_list = user_input.split("\n")
+        for line in user_input_list:
+            execute_python_code(line)
+            render_all()
+            print(farm)
+            time.sleep(1)
+    #render_all()
+    #print(farm)
+    #time.sleep(1)
 
 def handle_button_clear():
     global text_lines, cursor_x, cursor_y
@@ -172,6 +186,8 @@ def render_all():
 def handle_key_press(event):
     global cursor_x, cursor_y, text_lines
 
+    pygame.key.set_repeat(400, 100)
+    
     if event.key == pygame.K_BACKSPACE:
         line = text_lines[cursor_y]
         if cursor_x > 0:
