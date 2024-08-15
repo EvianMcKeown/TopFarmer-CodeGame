@@ -29,6 +29,7 @@ class Farmer:
         self.inventory.append(crop)
     
     def remove_inventory(self, crop):
+        #TODO Check if there is something to remove before doing it
         self.inventory.remove(crop)
 
     def get_inventory(self):
@@ -62,6 +63,7 @@ class Farmer:
                 dest = (self.x+1, self.y)
         
         if self.farm.grid[dest[0]][dest[1]].tile_type == 0 and crop in self.inventory:
+            #TODO Check if plant is in inventory before planting
             self.inventory.remove(crop)
             self.farm.grid[dest[0]][dest[1]] = CropTile(dest[0], dest[1], crop)
 
