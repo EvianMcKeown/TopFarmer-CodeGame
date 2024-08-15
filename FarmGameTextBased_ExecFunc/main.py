@@ -132,11 +132,15 @@ def render_inventory():
 
 def execute_python_code(code):
     try:
+<<<<<<< 4b15fcc8d272426b7cc45f7988624697b6306410
+        exec(code, {'farm': farm, 'print': print}, globals())
+=======
         x = 0
         #exec(code, {'farm': farm, 'print': print, 'x': x})
         #interp = cd.InteractiveConsole({'farm': farm, 'print': print, 'x': x})
         #compiled_code = cd.compile_command(code)
         interp.runcode(code)
+>>>>>>> 09a9ae3a3a512ed662fc7e7dc1d85db9cb165838
     except Exception as e:
         print(f"Error: {e}")
 
@@ -148,14 +152,22 @@ def handle_button_run():
     if user_input:
         # split by lines '\n', so that every line is show as it is executed
         user_input_list = user_input.split("\n")
+<<<<<<< 4b15fcc8d272426b7cc45f7988624697b6306410
+        final_user_input = ""
+=======
         for x in range(len(user_input_list)):
             user_input_list[x] = user_input_list[x].replace(";", "\n")
         
+>>>>>>> 09a9ae3a3a512ed662fc7e7dc1d85db9cb165838
         for line in user_input_list:
-            execute_python_code(line)
-            render_all()
-            print(farm)
-            time.sleep(1)
+            final_user_input += line + '\n'
+            if line[-1] != ':':
+                final_user_input += "    render_all()\n    time.sleep(1)\n"
+        print(final_user_input)
+        execute_python_code(final_user_input)
+            #render_all()
+            #print(farm)
+            #time.sleep(1)
     #render_all()
     #print(farm)
     #time.sleep(1)
