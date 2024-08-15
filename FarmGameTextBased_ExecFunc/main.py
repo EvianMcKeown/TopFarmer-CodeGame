@@ -37,9 +37,6 @@ BUTTON_HEIGHT = SCALE_FACTOR * 1
 SCREEN_WIDTH = FARM_WIDTH * SCALE_FACTOR + SIDE_WIDTH
 SCREEN_HEIGHT = FARM_HEIGHT * SCALE_FACTOR
 
-#keypress repeating
-pygame.key.set_repeat(400, 100)
-
 # Initialize farm with farmer  
 farm = FarmGrid(FARM_WIDTH, FARM_HEIGHT)
 farm.add_farmer()
@@ -49,6 +46,9 @@ pygame.init()
 pygame.display.set_caption("TopFarmer")
 surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
+#keypress repeating
+pygame.key.set_repeat(400, 50)
+
 
 user_input = "" 
 cursor_x = 0  # Cursor column position
