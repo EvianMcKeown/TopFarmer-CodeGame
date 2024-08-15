@@ -148,7 +148,7 @@ def handle_button_help():
     message = "Move the farmer: farm.farmer.move(\"direction\")\n"
     message +="direction can be left, right, up, down\n\n"
     message +="Plant a crop: farm.farmer.plant(\"crop\", \"direction\")\n"
-    message +="crop can be potato, carrop, pumpkin\n\n"
+    message +="crop can be potato, carrot, pumpkin\n\n"
     message +="Harvest a crop: farm.farmer.harvest(\"direction\")\n\n"
     root = tkinter.Tk()
     root.geometry("400x200")
