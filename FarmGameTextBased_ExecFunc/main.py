@@ -100,25 +100,10 @@ def render_text_input():
             cursor_x_pos = cursor_pos.get_width()
             pygame.draw.line(surface, GREEN, (cursor_x_pos, y_offset + (i * 24)), (cursor_x_pos, y_offset + (i * 24) + 24), 2)
 
-def render_button_run():
-    text_image = pygame.font.SysFont(None, int(SCALE_FACTOR / 2)).render("RUN", True, WHITE)
-    pygame.draw.rect(surface, GREEN, pygame.Rect(0, SCREEN_HEIGHT - SCALE_FACTOR, BUTTON_WIDTH, BUTTON_HEIGHT))
-    surface.blit(text_image, (7*SCREEN_WIDTH*0.005, (SCREEN_HEIGHT - SCALE_FACTOR)*1.04))
-
-def render_button_clear():
-    text_image = pygame.font.SysFont(None, int(SCALE_FACTOR / 2)).render("CLEAR", True, WHITE)
-    pygame.draw.rect(surface, BLUE, pygame.Rect(SCALE_FACTOR * 2, SCREEN_HEIGHT - SCALE_FACTOR, BUTTON_WIDTH, BUTTON_HEIGHT))
-    surface.blit(text_image, (27*SCREEN_WIDTH*0.005, (SCREEN_HEIGHT - SCALE_FACTOR)*1.04))
-
-def render_button_reset():
-    text_image = pygame.font.SysFont(None, int(SCALE_FACTOR / 2)).render("RESTART", True, WHITE)
-    pygame.draw.rect(surface, RED, pygame.Rect(SCALE_FACTOR * 4, SCREEN_HEIGHT - SCALE_FACTOR, BUTTON_WIDTH, BUTTON_HEIGHT))
-    surface.blit(text_image, (47*SCREEN_WIDTH*0.005, (SCREEN_HEIGHT - SCALE_FACTOR)*1.04))
-
-def render_button_help():
-    text_image = pygame.font.SysFont(None, int(SCALE_FACTOR / 2)).render("HELP", True, BLACK)
-    pygame.draw.rect(surface, YELLOW, pygame.Rect(SCALE_FACTOR * 6, SCREEN_HEIGHT - SCALE_FACTOR, BUTTON_WIDTH, BUTTON_HEIGHT))
-    surface.blit(text_image, (73*SCREEN_WIDTH*0.005, (SCREEN_HEIGHT - SCALE_FACTOR)*1.04))
+def render_button(txt, clr, bg, x, y, w, h):
+    text_image = pygame.font.SysFont(None, int(SCALE_FACTOR / 2)).render(txt, True, clr)
+    pygame.draw.rect(surface, bg, pygame.Rect(SCALE_FACTOR*x, SCALE_FACTOR*y, w*SCALE_FACTOR, h*SCALE_FACTOR))
+    surface.blit(text_image, ((x+1.12)*SCALE_FACTOR - len(txt)*7, y*SCALE_FACTOR + 16))
 
 def render_inventory():
     text_image = pygame.font.SysFont(None, int(SCALE_FACTOR / 2)).render(str(farm.farmer.get_inventory()), True, BLACK)
@@ -189,10 +174,10 @@ def render_all():
     render_farm()
     draw_grid(surface, SCREEN_WIDTH, SCREEN_HEIGHT, SCALE_FACTOR)
     render_text_input()
-    render_button_run()
-    render_button_clear()
-    render_button_reset()
-    render_button_help()
+    render_button("RUN", WHITE, GREEN, 0, 9, 2, 1)
+    render_button("CLEAR", WHITE, BLUE, 2, 9, 2, 1)
+    render_button("RESTART", WHITE, RED, 4, 9, 2, 1)
+    render_button("HELP", BLACK, YELLOW, 6, 9, 2, 1)
     render_inventory()
     pygame.display.flip()
 
