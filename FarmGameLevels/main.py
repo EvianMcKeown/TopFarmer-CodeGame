@@ -2,6 +2,7 @@
 
 import pygame
 import sys
+import time
 from farmgrid import FarmGrid  
 from sprites import *
 from levels import *
