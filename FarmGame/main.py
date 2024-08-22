@@ -5,10 +5,12 @@
 
 import pygame
 import sys
+import os
 import time
 import tkinter
 from farm import FarmGrid  
 from sprites import *
+from save import *
 
 #color constants
 BLACK = (0, 0, 0)
@@ -36,6 +38,8 @@ BUTTON_WIDTH = SCALE_FACTOR * 2
 BUTTON_HEIGHT = SCALE_FACTOR * 1
 SCREEN_WIDTH = FARM_WIDTH * SCALE_FACTOR + SIDE_WIDTH
 SCREEN_HEIGHT = FARM_HEIGHT * SCALE_FACTOR
+
+PATH_PREFIX = "./FarmGame/"
 
 # Initialize farm with farmer  
 farm = FarmGrid(FARM_WIDTH, FARM_HEIGHT)
@@ -242,13 +246,21 @@ def handle_key_press(event):
 def play_music(type):
     if type=="theme":
         #pygame.mixer.music.load("./FarmGameTextBased_ExecFunc/resources/Capstone-CodeGame.mp3")
-        pygame.mixer.music.load("./FarmGameTextBased_ExecFunc/resources/CodeGameTest.mp3")
+        pygame.mixer.music.load(PATH_PREFIX + "resources/CodeGameTest.mp3")
         pygame.mixer.music.set_volume(0.5)
         pygame.mixer.music.play(0, 0, 5000)
         pygame.mixer.music.fadeout(5)
         pygame.mixer.music.unload()
-        pygame.mixer.music.load("./FarmGameTextBased_ExecFunc/resources/Capstone-CodeGame.mp3")
+        pygame.mixer.music.load(PATH_PREFIX + "resources/Capstone-CodeGame.mp3")
         pygame.mixer.music.play(0, 0, 5000)    
+
+# Check if save file exists and load it
+SAVE_FILE_NAME = "savefile.txt"
+path = PATH_PREFIX + SAVE_FILE_NAME
+if os.path.isfile(path) and os.stat(path).st_size != 0:
+    w, h, f, c, g = load(path, farm, user_input)
+    farm.load_save(w, h, f, farm.grid)
+    user_input = c
 
 # Main loop
 running = True
@@ -259,6 +271,7 @@ while running:
             play_music("theme")       
   
         if event.type == pygame.QUIT:
+            save(PATH_PREFIX + SAVE_FILE_NAME, farm, "\n".join(text_lines))
             running = False
         
         if event.type == pygame.KEYDOWN:
