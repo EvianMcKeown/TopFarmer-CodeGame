@@ -15,6 +15,12 @@ class Farmer:
         # Give the farmer 5 of each crop
         self.inventory = [0, 1, 2] * 5
 
+    def load_save(self, x, y, inventory):
+        self.__init__(None)
+        self.x = x
+        self.y = y
+        self.inventory = inventory
+
     def __str__(self):
         return self.symbol
 
@@ -29,6 +35,9 @@ class Farmer:
 
     def get_inventory(self):
         return {self.crop_desc[crop]: self.inventory.count(crop) for crop in set(self.inventory)}
+    
+    def get_inventory_save(self):
+        return self.inventory
     
     def move(self, direction):
         '''Move to a non-obstacle tile next to the farmer'''
@@ -96,6 +105,13 @@ class FarmGrid:
         self.grid = []
         self.generate_farm()
 
+    def load_save(self, width, height, farmer, grid):
+        self.__init__()
+        self.width = width
+        self.heigh = height
+        self.farmer = farmer
+        self.grid = grid
+
     def generate_farm(self):
         '''Generates dirt farm with river and bridge'''
         self.grid = [[None for _ in range(self.height)] for _ in range(self.width)]
@@ -115,9 +131,11 @@ class FarmGrid:
     def __str__(self):
         '''Returns a text representation of the farm'''
         farmer_x, farmer_y = self.farmer.get_pos()
-        string = "width={}, height={}\n".format(self.width, self.height)
-        string += "farmer_position={} ({})\n".format((farmer_x, farmer_y), self.grid[farmer_x][farmer_y])
-        string += "farmer_inventory={}\n".format(self.farmer.get_inventory())
+        string = "width={}\nheight={}\n".format(self.width, self.height)
+        string += "farmer_x={}\n".format(farmer_x)
+        string += "farmer_y={}\n".format(farmer_y)
+        string += "farmer_inventory={}\n".format(self.farmer.get_inventory_save())
+
         for y in range(self.height):
             for x in range(self.width):
                 if (farmer_x, farmer_y) == (x, y):
