@@ -95,6 +95,7 @@ class FarmGrid:
         self.farmer = None
         self.grid = []
         self.generate_farm()
+        self.add_farmer(0, 0)
 
     def generate_farm(self):
         '''Generates dirt farm with river and bridge'''
