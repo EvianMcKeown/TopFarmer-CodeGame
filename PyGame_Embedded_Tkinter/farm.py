@@ -70,7 +70,7 @@ class Farmer:
             self.farm.grid[dest[0]][dest[1]].tile_type = 0
 
 class FarmTile:
-    tile_desc = {0: "dirt", 1: "grass", 2: "water", 3: "crop"}
+    tile_desc = {0: "dirt", 1: "grass", 2: "water", 3: "crop", 4: "tree"}
 
     def __init__(self, x, y, tile_type=0):
         self.tile_type = tile_type
@@ -98,20 +98,43 @@ class FarmGrid:
         self.add_farmer(0, 0)
 
     def generate_farm(self):
-        '''Generates dirt farm with river and bridge'''
+        # initialise empty grid
         self.grid = [[None for _ in range(self.height)] for _ in range(self.width)]
-        river_location = random.randrange(1, self.height - 1)
-        bridge_location = random.randrange(1, self.width - 1)
+
+        # determine river orientation (0=horizontal, 1=vertical)
+        river_orientation = random.randrange(2)
+        if river_orientation == 0:
+            river_range = self.height
+        else:
+            river_range = self.width
+        
+        # determine start and end point of river
+        river_start = random.randrange(3, river_range - 3)
+        river_end = random.randrange(3, river_range - 3)
+
+        # generate farm with river and dirt next to river
         for y in range(self.height):
             for x in range(self.width):
-                # Start with dirt
-                self.grid[x][y] = FarmTile(x, y, 0)
-                # Place river somewhere along farm height
-                if y == river_location:
-                    self.grid[x][y] = FarmTile(x, y, 2)
-                    # Place bridge somewhere along river
-                    if x == bridge_location:
-                        self.grid[x][y] = FarmTile(x, y, 0)
+                if river_orientation == 0:
+                    if y == int(x*(river_start-river_end)/(self.width)+river_start):
+                        self.grid[x][y] = FarmTile(x, y, 2) # water
+                        self.grid[x][y-1] = FarmTile(x, y, 0) # dirt
+                    else:
+                        self.grid[x][y] = FarmTile(x, y, 1) # grass
+                else:
+                    if x == int(y*(river_start-river_end)/(self.width)+river_start):
+                        self.grid[x][y] = FarmTile(x, y, 2) # water
+                        self.grid[x-1][y] = FarmTile(x, y, 0) # dirt
+                    else:
+                        self.grid[x][y] = FarmTile(x, y, 1) # grass
+        
+        # place a tree somwhere on the grass
+        while True:
+            tree_x = random.randrange(1, self.width - 1)
+            tree_y = random.randrange(1, self.height - 1)
+            if self.grid[tree_x][tree_y].tile_type == 1:
+                break
+        self.grid[tree_x][tree_y] = FarmTile(tree_x, tree_y, 4) # tree
 
     def __str__(self):
         '''Returns a text representation of the farm'''

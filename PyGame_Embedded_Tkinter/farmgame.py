@@ -200,7 +200,3 @@ class SettingsPage(tk.Frame):
     def handle_home(self):
         print("home")
         self.controller.show_frame(HomePage)
-
-# Driver code
-farmgame = FarmGame()
-farmgame.mainloop()

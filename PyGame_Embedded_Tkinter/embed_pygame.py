@@ -5,7 +5,8 @@ import time
 from farm import FarmGrid
 
 class EmbedPygame:
-    #color constants
+
+    # general colors
     BLACK = (0, 0, 0)
     WHITE = (255, 255, 255)
     YELLOW = (255, 255, 0)
@@ -14,15 +15,19 @@ class EmbedPygame:
     BLUE = (0, 0, 255)
     GRAY = (128, 128, 128)
 
+    # tile colors
     DIRT = (139,69,19)
     GRASS = (148, 180, 5)
     WATER = (30,144,255)
     CROP = (255,69,0)
+    TREE = (18, 55, 11)
 
+    # crop colors
     POTATO = (183, 146, 104)
     CARROT = (255, 117, 24)
     PUMPKIN = (237, 145, 33)
 
+    # constants
     SCALE_FACTOR = 40
     FARM_WIDTH = 10
     FARM_HEIGHT = 10
@@ -59,6 +64,8 @@ class EmbedPygame:
                 elif tile.tile_type == 3:
                     crop_colors = [self.POTATO, self.CARROT, self.PUMPKIN]
                     color = crop_colors[tile.crop_type]
+                elif tile.tile_type == 4:
+                    color = self.TREE
                 
                 if self.farm.farmer.get_pos() == (x, y):
                     color = self.RED
