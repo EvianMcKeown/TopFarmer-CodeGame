@@ -78,11 +78,15 @@ class EmbedPygame:
         final_code = ""
         for line in code_lines:
             final_code += line + '\n'
-            if line[-1] != ':':
+            if line[-1] != ':' and "else" not in line:
                 if line[0] == "\t":
+                    final_code += "\t"
+                if line[1] == "\t":
                     final_code += "\t"
                 final_code += "update()\n"
                 if line[0] == "\t":
+                    final_code += "\t"
+                if line[1] == "\t":
                     final_code += "\t"
                 final_code += "time.sleep(1)\n"
         print(final_code)

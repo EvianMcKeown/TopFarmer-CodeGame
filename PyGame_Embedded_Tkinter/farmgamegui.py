@@ -5,7 +5,7 @@ import os
 import threading
 import embed_pygame
 
-class FarmGame(tk.Tk):
+class FarmGameGUI(tk.Tk):
 
     # __init__ function for class FarmGame 
     def __init__(self, *args, **kwargs): 
@@ -30,7 +30,7 @@ class FarmGame(tk.Tk):
   
         # iterating through a tuple consisting
         # of the different page layouts
-        for F in (HomePage, GamePage, LevelsPage, SettingsPage):
+        for F in (HomePage, GamePage, LevelsPage, StatisticsPage, SettingsPage):
   
             frame = F(container, self)
   
@@ -69,6 +69,10 @@ class HomePage(tk.Frame):
         btn_levels = tk.Button(self, text= "Levels", bg="white", width=10, anchor=tk.CENTER, command=self.handle_levels)
         btn_levels.pack(pady=20)
 
+        '''Button: Statistics'''
+        btn_statistics = tk.Button(self, text= "Statistics", bg="white", width=10, anchor=tk.CENTER, command=self.handle_statistics)
+        btn_statistics.pack(pady=20)
+
         '''Button: Settings'''
         btn_settings = tk.Button(self, text= "Settings", bg="white", width=10, anchor=tk.CENTER, command=self.handle_settings)
         btn_settings.pack(pady=20)
@@ -98,6 +102,12 @@ class HomePage(tk.Frame):
         print("levels")
         self.controller.show_frame(LevelsPage)
         # TODO: show list of levels
+    
+    def handle_statistics(self):
+        print("statistics")
+        self.controller.show_frame(StatisticsPage)
+        self.controller.frames[StatisticsPage].refresh()
+        # TODO: show statistics
 
     def handle_settings(self):
         print("settings")
@@ -184,6 +194,101 @@ class LevelsPage(tk.Frame):
         btn_home = tk.Button(self, text="Home", command=self.handle_home)
         btn_home.pack(anchor="nw")
     
+    def handle_home(self):
+        print("home")
+        self.controller.show_frame(HomePage)
+
+# TODO : Add statistics functionality 
+class StatisticsPage(tk.Frame):
+    def __init__(self, parent, controller): 
+        tk.Frame.__init__(self, parent)
+        self.config(bg="lime green")
+        self.controller = controller
+
+        '''Button: Home'''
+        btn_home = tk.Button(self, text="Home", command=self.handle_home)
+        btn_home.pack(anchor="nw")
+
+        '''Lable: Title'''
+        lbl_title = tk.Label(self, text="Statistics", font=("Comic Sans MS", 20, "bold"), fg="white", bg="lime green", anchor=tk.CENTER)
+        lbl_title.pack(anchor="center", side="top", pady=20)
+
+        '''Frame: Statistics'''
+        self.frm_stats = tk.Frame(self)
+
+        '''Label: Movement Headings'''
+        self.lbl_movement = tk.Label(self.frm_stats, text="Movement")
+        self.lbl_movement.grid(row=0, column=0, columnspan=2)
+
+        '''Label: Left Moves'''
+        self.lbl_left_moves = tk.Label(self.frm_stats, text="Left Moves:")
+        self.lbl_left_moves.grid(row=1, column=0)
+
+        '''Label: Left Moves Value'''
+        self.left_moves_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves("left"))
+        self.lbl_left_moves_value = tk.Label(self.frm_stats, text=self.left_moves_value)
+        self.lbl_left_moves_value.grid(row=1, column=1)
+
+        '''Label: Right Moves'''
+        self.lbl_right_moves = tk.Label(self.frm_stats, text="Right Moves:")
+        self.lbl_right_moves.grid(row=2, column=0)
+
+        '''Label: Right Moves Value'''
+        self.right_moves_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves("right"))
+        self.lbl_right_moves_value = tk.Label(self.frm_stats, text=self.right_moves_value)
+        self.lbl_right_moves_value.grid(row=2, column=1)
+
+        '''Label: Up Moves'''
+        self.lbl_up_moves = tk.Label(self.frm_stats, text="Up Moves:")
+        self.lbl_up_moves.grid(row=3, column=0)
+
+        '''Label: Up Moves Value'''
+        self.up_moves_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves("up"))
+        self.lbl_up_moves_value = tk.Label(self.frm_stats, text=self.up_moves_value)
+        self.lbl_up_moves_value.grid(row=3, column=1)
+
+        '''Label: Down Moves'''
+        self.down_moves_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves("down"))
+        self.lbl_down_moves = tk.Label(self.frm_stats, text="Down Moves:")
+        self.lbl_down_moves.grid(row=4, column=0)
+
+        '''Label: Down Moves Value'''
+        self.down_moves_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves("down"))
+        self.lbl_down_moves_value = tk.Label(self.frm_stats, text=self.down_moves_value)
+        self.lbl_down_moves_value.grid(row=4, column=1)
+
+        '''Label: Planting'''
+        self.lbl_plant_harvest = tk.Label(self.frm_stats, text="Planting")
+        self.lbl_plant_harvest.grid(row=0, column=2, columnspan=2)
+
+        '''Label: Potatoes Planted'''
+        self.lbl_potatoes_planted = tk.Label(self.frm_stats, text="Potatoes")
+        self.lbl_potatoes_planted.grid(row=1, column=2)
+
+        '''Label: Potatoes Planted Value'''
+        self.potatoes_planted_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_potatoes_planted())
+        self.lbl_potatoes_planted_value = tk.Label(self.frm_stats, text=self.potatoes_planted_value)
+        self.lbl_potatoes_planted_value.grid(row=1, column=3)
+
+        self.frm_stats.pack(anchor="nw", padx=20, pady=20)
+    
+    def refresh(self):
+        self.left_moves_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves("left"))
+        self.lbl_left_moves_value.config(text=self.left_moves_value)
+
+        self.right_moves_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves("right"))
+        self.lbl_right_moves_value.config(text=self.right_moves_value)
+
+        self.up_moves_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves("up"))
+        self.lbl_up_moves_value.config(text=self.up_moves_value)
+
+        self.down_moves_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves("down"))
+        self.lbl_down_moves_value.config(text=self.down_moves_value)
+
+        self.potatoes_planted_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_potatoes_planted())
+        self.lbl_potatoes_planted_value.config(text=self.potatoes_planted_value)
+
+
     def handle_home(self):
         print("home")
         self.controller.show_frame(HomePage)

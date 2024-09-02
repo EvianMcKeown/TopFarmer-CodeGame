@@ -1,7 +1,7 @@
-import farmgame
+import farmgamegui
 
 def main():
-    fg = farmgame.FarmGame()
+    fg = farmgamegui.FarmGameGUI()
     fg.mainloop()
 
 if __name__ == "__main__":

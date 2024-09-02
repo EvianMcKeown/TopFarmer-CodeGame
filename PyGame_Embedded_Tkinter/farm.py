@@ -2,6 +2,7 @@
 # By Mustafa Mohamed
 # modified 13 Aug 2024 by Zahra Bawa
 import random
+from stats import FarmStats
 
 class Farmer:
     crop_desc = {0: "potato", 1: "carrot", 2: "pumpkin"}
@@ -41,10 +42,11 @@ class Farmer:
         
         if self.farm.walkable(dest) and not self.farm.out_of_bounds(dest):
             self.x, self.y = dest
+            self.farm.stats.add_moves(direction)
 
     def plant(self, crop, direction):
         '''Plant a crop on a dirt tile next to the farmer'''
-        crop = {v: k for k, v in self.crop_desc.items()}.get(crop)
+        crop = {v: k for k, v in self.crop_desc.items()}.get(crop) # invert dictionary
         dest = {
             'up': (self.x, self.y - 1),
             'down': (self.x, self.y + 1),
@@ -55,6 +57,8 @@ class Farmer:
         if self.farm.grid[dest[0]][dest[1]].tile_type == 0 and crop in self.inventory:
             self.inventory.remove(crop)
             self.farm.grid[dest[0]][dest[1]] = CropTile(dest[0], dest[1], crop)
+            self.farm.stats.add_crops_planted(self.crop_desc[crop])
+
 
     def harvest(self, direction):
         '''Harvest a crop from a crop tile next to the farmer'''
@@ -66,8 +70,14 @@ class Farmer:
         }.get(direction, self.get_pos())
         
         if self.farm.grid[dest[0]][dest[1]].tile_type == 3:
-            self.inventory.append(self.farm.grid[dest[0]][dest[1]].crop_type)
+            crop = self.farm.grid[dest[0]][dest[1]].crop_type
+            self.inventory.append(crop)
             self.farm.grid[dest[0]][dest[1]].tile_type = 0
+            self.farm.stats.add_crops_harvested(self.crop_desc[crop])
+            print("HARVEST POTATO:  ", self.farm.stats.get_potatoes_harvested())
+            print("HARVEST CARROT:  ", self.farm.stats.get_carrots_harvested())
+            print("HARVEST PUMPKIN: ", self.farm.stats.get_pumpkins_harvested())
+            print("HARVEST TOTAL:   ", self.farm.stats.get_total_harvested())
 
 class FarmTile:
     tile_desc = {0: "dirt", 1: "grass", 2: "water", 3: "crop", 4: "tree"}
@@ -94,6 +104,7 @@ class FarmGrid:
         self.height = height
         self.farmer = None
         self.grid = []
+        self.stats = FarmStats()
         self.generate_farm()
         self.add_farmer(0, 0)
 
