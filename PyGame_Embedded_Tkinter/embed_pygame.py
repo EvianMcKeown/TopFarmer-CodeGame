@@ -28,7 +28,7 @@ class EmbedPygame:
     PUMPKIN = (237, 145, 33)
 
     # constants
-    SCALE_FACTOR = 40
+    SCALE_FACTOR = 41
     FARM_WIDTH = 10
     FARM_HEIGHT = 10
     SCREEN_WIDTH = FARM_WIDTH * SCALE_FACTOR

@@ -15,7 +15,7 @@ class FarmGameGUI(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
 
         SCREEN_WIDTH=900
-        SCREEN_HEIGHT=450
+        SCREEN_HEIGHT=500
         self.title("FarmGame")
         self.geometry("{}x{}".format(SCREEN_WIDTH, SCREEN_HEIGHT))
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
@@ -136,7 +136,7 @@ class GamePage(tk.Frame):
         lbl_code.pack(anchor="w")
 
         # text box for user code input
-        self.txt_code = tk.Text(frm_input, width=50, height=20)
+        self.txt_code = tk.Text(frm_input, width=50, height=24)
         self.txt_code.pack(anchor="w")
         self.txt_code.insert("1.0", controller.saveandload.load_code())
 
@@ -153,11 +153,15 @@ class GamePage(tk.Frame):
         btn_help.pack(anchor="s", side="left", pady=5)
         btn_home.pack(anchor="s", side="left", pady=5)
 
-        frm_input.pack(anchor="nw", side="left", padx=20, pady=20) # pack input frame
+        frm_input.pack(anchor="nw", side="left", padx=20, pady=10) # pack input frame
+
+        # label with farmer inventory
+        self.lbl_inventory = tk.Label(self)
+        self.lbl_inventory.pack(side="top", padx=5, pady=5)
 
         # frame for embedded pygame display (do not question its magic)
-        frm_embed = tk.Frame(self, width=400, height=400)
-        frm_embed.pack(anchor="ne", side="top", padx=20, pady=20)
+        frm_embed = tk.Frame(self, width=410, height=410)
+        frm_embed.pack(anchor="ne", side="top", padx=20, pady=0)
         self.grid()
         os.environ['SDL_WINDOWID'] = str(frm_embed.winfo_id())
         self.update()
@@ -167,8 +171,15 @@ class GamePage(tk.Frame):
         def pygame_loop():
             while True:
                 self.embed_pygame_o.update()
+
         thread = threading.Thread(target=pygame_loop)
         thread.start()
+
+    def update_inventory(self):
+        potatoes = self.embed_pygame_o.farm.farmer.inventory.count(0)
+        carrots = self.embed_pygame_o.farm.farmer.inventory.count(1)
+        pumpkins = self.embed_pygame_o.farm.farmer.inventory.count(2)
+        self.lbl_inventory.config(text="Inventory: Potatoes: {}, Carrots: {}, Pumpkins: {}".format(potatoes, carrots, pumpkins))
 
     def handle_run(self):
         print("run")
@@ -203,10 +214,42 @@ class LevelsPage(tk.Frame):
 
         btn_home = tk.Button(self, text="Home", command=self.handle_home)
         btn_home.pack(anchor="nw")
+
+        btn_lvl1 = tk.Button(self, text="Level 1", command=self.handle_lvl1)
+        btn_lvl1.pack(anchor="center")
+
+        btn_lvl2 = tk.Button(self, text="Level 2", command=self.handle_lvl2)
+        btn_lvl2.pack(anchor="center")
+
+        btn_lvl3 = tk.Button(self, text="Level 3", command=self.handle_lvl3)
+        btn_lvl3.pack(anchor="center")
+
+        btn_lvl4 = tk.Button(self, text="Level 4", command=self.handle_lvl4)
+        btn_lvl4.pack(anchor="center")
     
     def handle_home(self):
         print("home")
         self.controller.show_frame(HomePage)
+    
+    def handle_lvl1(self):
+        print("lvl1")
+        # TODO: load level 1
+        self.controller.show_frame(GamePage)
+    
+    def handle_lvl2(self):
+        print("lvl2")
+        # TODO: load level 2
+        self.controller.show_frame(GamePage)
+    
+    def handle_lvl3(self):
+        print("lvl3")
+        # TODO: load level 3
+        self.controller.show_frame(GamePage)
+    
+    def handle_lvl4(self):
+        print("lvl4")
+        # TODO: load level 4
+        self.controller.show_frame(GamePage)
 
 # TODO : Add statistics functionality 
 class StatisticsPage(tk.Frame):
