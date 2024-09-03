@@ -214,80 +214,152 @@ class StatisticsPage(tk.Frame):
         lbl_title.pack(anchor="center", side="top", pady=20)
 
         '''Frame: Statistics'''
-        self.frm_stats = tk.Frame(self)
+        self.frm_stats = tk.Frame(self, padx=10, pady=10)
 
-        '''Label: Movement Headings'''
-        self.lbl_movement = tk.Label(self.frm_stats, text="Movement")
-        self.lbl_movement.grid(row=0, column=0, columnspan=2)
+        PADX = 1
+        PADY = 1
+        WIDTH = 10
+        BORDERWIDTH = 2
+        RELIEF = "ridge"
+
+        '''Label: Moves'''
+        self.lbl_movement = tk.Label(self.frm_stats, text="Moves", width=WIDTH, borderwidth=BORDERWIDTH, relief=RELIEF)
+        self.lbl_movement.grid(row=0, column=0, columnspan=2, padx=PADX, pady=PADY, sticky="ew")
 
         '''Label: Left Moves'''
-        self.lbl_left_moves = tk.Label(self.frm_stats, text="Left Moves:")
-        self.lbl_left_moves.grid(row=1, column=0)
+        self.lbl_left_moves = tk.Label(self.frm_stats, text="Left", width=WIDTH, borderwidth=BORDERWIDTH, relief=RELIEF)
+        self.lbl_left_moves.grid(row=1, column=0, padx=PADX, pady=PADY)
 
         '''Label: Left Moves Value'''
         self.left_moves_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves("left"))
-        self.lbl_left_moves_value = tk.Label(self.frm_stats, text=self.left_moves_value)
-        self.lbl_left_moves_value.grid(row=1, column=1)
+        self.lbl_left_moves_value = tk.Label(self.frm_stats, text=self.left_moves_value, width=WIDTH, borderwidth=BORDERWIDTH, relief=RELIEF)
+        self.lbl_left_moves_value.grid(row=1, column=1, padx=PADX, pady=PADY)
 
         '''Label: Right Moves'''
-        self.lbl_right_moves = tk.Label(self.frm_stats, text="Right Moves:")
-        self.lbl_right_moves.grid(row=2, column=0)
+        self.lbl_right_moves = tk.Label(self.frm_stats, text="Right", width=WIDTH, borderwidth=BORDERWIDTH, relief=RELIEF)
+        self.lbl_right_moves.grid(row=2, column=0, padx=PADX, pady=PADY)
 
         '''Label: Right Moves Value'''
         self.right_moves_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves("right"))
-        self.lbl_right_moves_value = tk.Label(self.frm_stats, text=self.right_moves_value)
-        self.lbl_right_moves_value.grid(row=2, column=1)
+        self.lbl_right_moves_value = tk.Label(self.frm_stats, text=self.right_moves_value, width=WIDTH, borderwidth=BORDERWIDTH, relief=RELIEF)
+        self.lbl_right_moves_value.grid(row=2, column=1, padx=PADX, pady=PADY)
 
         '''Label: Up Moves'''
-        self.lbl_up_moves = tk.Label(self.frm_stats, text="Up Moves:")
-        self.lbl_up_moves.grid(row=3, column=0)
+        self.lbl_up_moves = tk.Label(self.frm_stats, text="Up", width=WIDTH, borderwidth=BORDERWIDTH, relief=RELIEF)
+        self.lbl_up_moves.grid(row=3, column=0, padx=PADX, pady=PADY)
 
         '''Label: Up Moves Value'''
         self.up_moves_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves("up"))
-        self.lbl_up_moves_value = tk.Label(self.frm_stats, text=self.up_moves_value)
-        self.lbl_up_moves_value.grid(row=3, column=1)
+        self.lbl_up_moves_value = tk.Label(self.frm_stats, text=self.up_moves_value, width=WIDTH, borderwidth=BORDERWIDTH, relief=RELIEF)
+        self.lbl_up_moves_value.grid(row=3, column=1, padx=PADX, pady=PADY)
 
         '''Label: Down Moves'''
         self.down_moves_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves("down"))
-        self.lbl_down_moves = tk.Label(self.frm_stats, text="Down Moves:")
-        self.lbl_down_moves.grid(row=4, column=0)
+        self.lbl_down_moves = tk.Label(self.frm_stats, text="Down", width=WIDTH, borderwidth=BORDERWIDTH, relief=RELIEF)
+        self.lbl_down_moves.grid(row=4, column=0, padx=PADX, pady=PADY)
 
         '''Label: Down Moves Value'''
         self.down_moves_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves("down"))
-        self.lbl_down_moves_value = tk.Label(self.frm_stats, text=self.down_moves_value)
-        self.lbl_down_moves_value.grid(row=4, column=1)
+        self.lbl_down_moves_value = tk.Label(self.frm_stats, text=self.down_moves_value, width=WIDTH, borderwidth=BORDERWIDTH, relief=RELIEF)
+        self.lbl_down_moves_value.grid(row=4, column=1, padx=PADX, pady=PADY)
 
-        '''Label: Planting'''
-        self.lbl_plant_harvest = tk.Label(self.frm_stats, text="Planting")
-        self.lbl_plant_harvest.grid(row=0, column=2, columnspan=2)
+        '''Label: Crops'''
+        self.lbl_crops = tk.Label(self.frm_stats, text="Crops", width=WIDTH, borderwidth=BORDERWIDTH, relief=RELIEF)
+        self.lbl_crops.grid(row=0, column=2, padx=PADX, pady=PADY)
+
+        '''Label: Planted'''
+        self.lbl_planting = tk.Label(self.frm_stats, text="Planted", width=WIDTH, borderwidth=BORDERWIDTH, relief=RELIEF)
+        self.lbl_planting.grid(row=0, column=3, padx=PADX, pady=PADY)
 
         '''Label: Potatoes Planted'''
-        self.lbl_potatoes_planted = tk.Label(self.frm_stats, text="Potatoes")
-        self.lbl_potatoes_planted.grid(row=1, column=2)
+        self.lbl_potatoes_planted = tk.Label(self.frm_stats, text="Potatoes", width=WIDTH, borderwidth=BORDERWIDTH, relief=RELIEF)
+        self.lbl_potatoes_planted.grid(row=1, column=2, padx=PADX, pady=PADY)
 
         '''Label: Potatoes Planted Value'''
         self.potatoes_planted_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_potatoes_planted())
-        self.lbl_potatoes_planted_value = tk.Label(self.frm_stats, text=self.potatoes_planted_value)
-        self.lbl_potatoes_planted_value.grid(row=1, column=3)
+        self.lbl_potatoes_planted_value = tk.Label(self.frm_stats, text=self.potatoes_planted_value, width=WIDTH, borderwidth=BORDERWIDTH, relief=RELIEF)
+        self.lbl_potatoes_planted_value.grid(row=1, column=3, padx=PADX, pady=PADY)
 
-        self.frm_stats.pack(anchor="nw", padx=20, pady=20)
+        '''Label: Carrots Planted'''
+        self.lbl_carrots_planted = tk.Label(self.frm_stats, text="Carrots", width=WIDTH, borderwidth=BORDERWIDTH, relief=RELIEF)
+        self.lbl_carrots_planted.grid(row=2, column=2, padx=PADX, pady=PADY)
+
+        '''Label: Carrots Planted Value'''
+        self.carrots_planted_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_carrots_planted())
+        self.lbl_carrots_planted_value = tk.Label(self.frm_stats, text=self.carrots_planted_value, width=WIDTH, borderwidth=BORDERWIDTH, relief=RELIEF)
+        self.lbl_carrots_planted_value.grid(row=2, column=3, padx=PADX, pady=PADY)
+
+        '''Label: Pumpkins Planted'''
+        self.lbl_pumpkins_planted = tk.Label(self.frm_stats, text="Pumpkins", width=WIDTH, borderwidth=BORDERWIDTH, relief=RELIEF)
+        self.lbl_pumpkins_planted.grid(row=3, column=2, padx=PADX, pady=PADY)
+
+        '''Label: Pumpkins Planted Value'''
+        self.pumpkins_planted_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_pumpkins_planted())
+        self.lbl_pumpkins_planted_value = tk.Label(self.frm_stats, text=self.pumpkins_planted_value, width=WIDTH, borderwidth=BORDERWIDTH, relief=RELIEF)
+        self.lbl_pumpkins_planted_value.grid(row=3, column=3, padx=PADX, pady=PADY)
+
+        '''Label: Harvested'''
+        self.lbl_harvesting = tk.Label(self.frm_stats, text="Harvested", width=WIDTH, borderwidth=BORDERWIDTH, relief=RELIEF)
+        self.lbl_harvesting.grid(row=0, column=4, padx=PADX, pady=PADY)
+
+        '''Label: Potatoes Planted Value'''
+        self.potatoes_harvested_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_potatoes_harvested())
+        self.lbl_potatoes_harvested_value = tk.Label(self.frm_stats, text=self.potatoes_harvested_value, width=WIDTH, borderwidth=BORDERWIDTH, relief=RELIEF)
+        self.lbl_potatoes_harvested_value.grid(row=1, column=4, padx=PADX, pady=PADY)
+
+        '''Label: Carrots Planted Value'''
+        self.carrots_harvested_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_carrots_harvested())
+        self.lbl_carrots_harvested_value = tk.Label(self.frm_stats, text=self.carrots_harvested_value, width=WIDTH, borderwidth=BORDERWIDTH, relief=RELIEF)
+        self.lbl_carrots_harvested_value.grid(row=2, column=4, padx=PADX, pady=PADY)
+
+        '''Label: Pumpkins Planted Value'''
+        self.pumpkins_harvested_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_pumpkins_harvested())
+        self.lbl_pumpkins_harvested_value = tk.Label(self.frm_stats, text=self.pumpkins_harvested_value, width=WIDTH, borderwidth=BORDERWIDTH, relief=RELIEF)
+        self.lbl_pumpkins_harvested_value.grid(row=3, column=4, padx=PADX, pady=PADY)
+
+        '''Pack Statistics Frame'''
+        self.frm_stats.pack(anchor="center", padx=20, pady=20)
     
     def refresh(self):
+        '''Refresh Left Moves'''
         self.left_moves_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves("left"))
         self.lbl_left_moves_value.config(text=self.left_moves_value)
 
+        '''Refresh Right Moves'''
         self.right_moves_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves("right"))
         self.lbl_right_moves_value.config(text=self.right_moves_value)
 
+        '''Refresh Up Moves'''
         self.up_moves_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves("up"))
         self.lbl_up_moves_value.config(text=self.up_moves_value)
 
+        '''Refesh Down Moves'''
         self.down_moves_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves("down"))
         self.lbl_down_moves_value.config(text=self.down_moves_value)
 
+        '''Refresh Potatoes Planted'''
         self.potatoes_planted_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_potatoes_planted())
         self.lbl_potatoes_planted_value.config(text=self.potatoes_planted_value)
 
+        '''Refresh Carrots Planted'''
+        self.carrots_planted_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_carrots_planted())
+        self.lbl_carrots_planted_value.config(text=self.carrots_planted_value)
+
+        '''Refresh Pumpkins Planted'''
+        self.pumpkins_planted_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_pumpkins_planted())
+        self.lbl_pumpkins_planted_value.config(text=self.pumpkins_planted_value)
+
+        '''Refresh Potatoes Harvested'''
+        self.potatoes_harvested_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_potatoes_harvested())
+        self.lbl_potatoes_harvested_value.config(text=self.potatoes_harvested_value)
+
+        '''Refresh Carrots Harvested'''
+        self.carrots_harvested_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_carrots_harvested())
+        self.lbl_carrots_harvested_value.config(text=self.carrots_harvested_value)
+
+        '''Refresh Pumpkins Harvested'''
+        self.pumpkins_harvested_value = str(self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_pumpkins_harvested())
+        self.lbl_pumpkins_harvested_value.config(text=self.pumpkins_harvested_value)
 
     def handle_home(self):
         print("home")
@@ -298,10 +370,29 @@ class SettingsPage(tk.Frame):
     def __init__(self, parent, controller): 
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        self.config(bg="LightBlue4")
 
+        '''Button: Home'''
         btn_home = tk.Button(self, text="Home", command=self.handle_home)
         btn_home.pack(anchor="nw")
+
+        '''Lable: Title'''
+        lbl_title = tk.Label(self, text="Settings", font=("Comic Sans MS", 20, "bold"), fg="white", bg="LightBlue4", anchor=tk.CENTER)
+        lbl_title.pack(anchor="center", side="top", pady=20)
+
+        '''Checkbutton: Slow Mode'''
+        self.slow_mode = tk.IntVar()
+        chk_slow_mode = tk.Checkbutton(self, text="Slow Mode", variable=self.slow_mode, onvalue=1, offvalue=0, command=self.handle_slow_mode)
+        chk_slow_mode.pack(anchor="center")
     
     def handle_home(self):
         print("home")
         self.controller.show_frame(HomePage)
+    
+    def handle_slow_mode(self):
+        if self.slow_mode.get() == 1:
+            self.controller.frames[GamePage].embed_pygame_o.slow_mode = True
+            print("SLOWMODE ON")
+        else:
+            self.controller.frames[GamePage].embed_pygame_o.slow_mode = False
+            print("SLOWMODE OFF")

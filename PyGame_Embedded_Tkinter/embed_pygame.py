@@ -2,7 +2,7 @@
 
 import pygame
 import time
-from farm import FarmGrid
+from farmgrid import FarmGrid
 
 class EmbedPygame:
 
@@ -43,6 +43,9 @@ class EmbedPygame:
         pygame.display.set_caption("TopFarmer")
         self.surface = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
 
+        # Should the code execute step by step
+        self.slow_mode = True
+
 
     def render_grid(self, width, height, cell_size):
         for x in range(0, width, cell_size):
@@ -74,21 +77,23 @@ class EmbedPygame:
     def execute_python_code(self, code):
         code = code.replace('farmer.', 'farm.farmer.')
         code_lines = code.split("\n")
-        print(code_lines)
         final_code = ""
-        for line in code_lines:
-            final_code += line + '\n'
-            if line[-1] != ':' and "else" not in line:
-                if line[0] == "\t":
-                    final_code += "\t"
-                if line[1] == "\t":
-                    final_code += "\t"
-                final_code += "update()\n"
-                if line[0] == "\t":
-                    final_code += "\t"
-                if line[1] == "\t":
-                    final_code += "\t"
-                final_code += "time.sleep(1)\n"
+        if self.slow_mode:
+            for line in code_lines:
+                final_code += line + '\n'
+                if line[-1] != ':' and "else" not in line:
+                    if line[0] == "\t":
+                        final_code += "\t"
+                    if line[1] == "\t":
+                        final_code += "\t"
+                    final_code += "update()\n"
+                    if line[0] == "\t":
+                        final_code += "\t"
+                    if line[1] == "\t":
+                        final_code += "\t"
+                    final_code += "time.sleep(1)\n"
+        else:
+            final_code = code
         print(final_code)
         try:
             exec(final_code, { 'time': time, 'farm': self.farm, 'update': self.update})
