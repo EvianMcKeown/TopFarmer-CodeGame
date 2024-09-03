@@ -46,6 +46,9 @@ class EmbedPygame:
         # Should the code execute step by step
         self.slow_mode = True
 
+    def exit(self):
+        pygame.QUIT
+
 
     def render_grid(self, width, height, cell_size):
         for x in range(0, width, cell_size):

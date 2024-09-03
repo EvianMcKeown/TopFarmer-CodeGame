@@ -4,6 +4,7 @@ from tkinter import messagebox
 import os
 import threading
 import embed_pygame
+from saveandload import SaveAndLoad
 
 class FarmGameGUI(tk.Tk):
 
@@ -17,6 +18,9 @@ class FarmGameGUI(tk.Tk):
         SCREEN_HEIGHT=450
         self.title("FarmGame")
         self.geometry("{}x{}".format(SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
+
+        self.saveandload = SaveAndLoad()
 
         # creating a container
         container = tk.Frame(self)  
@@ -46,6 +50,11 @@ class FarmGameGUI(tk.Tk):
     def show_frame(self, cont):
         frame = self.frames[cont]
         frame.tkraise()
+    
+    def on_closing(self):
+        self.saveandload.save_code(self.frames[GamePage].txt_code.get(1.0, "end-1c"))
+        self.frames[GamePage].embed_pygame_o.exit()
+        self.destroy()
 
 class HomePage(tk.Frame):
     def __init__(self, parent, controller):
@@ -129,6 +138,7 @@ class GamePage(tk.Frame):
         # text box for user code input
         self.txt_code = tk.Text(frm_input, width=50, height=20)
         self.txt_code.pack(anchor="w")
+        self.txt_code.insert("1.0", controller.saveandload.load_code())
 
         # buttons for control/navigation
         btn_run = tk.Button(frm_input, text="Run", width=5, command=self.handle_run)
@@ -381,9 +391,10 @@ class SettingsPage(tk.Frame):
         lbl_title.pack(anchor="center", side="top", pady=20)
 
         '''Checkbutton: Slow Mode'''
-        self.slow_mode = tk.IntVar()
-        chk_slow_mode = tk.Checkbutton(self, text="Slow Mode", variable=self.slow_mode, onvalue=1, offvalue=0, command=self.handle_slow_mode)
-        chk_slow_mode.pack(anchor="center")
+        self.slow_mode = tk.IntVar(value=1)
+        self.chk_slow_mode = tk.Checkbutton(self, text="Slow Mode", variable=self.slow_mode, onvalue=1, offvalue=0, command=self.handle_slow_mode)
+        self.chk_slow_mode.config(fg="black", bg="LightBlue4")
+        self.chk_slow_mode.pack(anchor="center")
     
     def handle_home(self):
         print("home")
