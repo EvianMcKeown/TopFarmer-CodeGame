@@ -1,0 +1,2 @@
+restart goes to first lvl
+new game does not display first task

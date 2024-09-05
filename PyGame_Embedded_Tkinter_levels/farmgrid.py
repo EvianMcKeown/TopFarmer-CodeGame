@@ -1,0 +1,115 @@
+import random
+from farmer import Farmer
+from farmtile import FarmTile
+from stats import FarmStats
+
+class FarmGrid:
+    def __init__(self, width=10, height=10, config='plain'):
+        self.width = width
+        self.height = height
+        self.farmer = None
+        self.grid = []
+        self.stats = FarmStats(self)
+        self.config = config
+        self.generate_farm()
+        self.add_farmer(0, 0)
+
+    def generate_farm(self):        # generate farm based on chosen config type
+        if self.config == 'plain':
+            self.generate_plain()
+        elif self.config == 'river':
+            self.generate_river()
+        elif self.config == 'tree_river':
+            self.generate_tree_river()
+        elif self.config == 'grass':
+            self.generate_grass()
+        else:
+            raise ValueError("Unknown farm configuration")
+
+    def generate_plain(self):
+        self.grid = [[FarmTile(x, y, 0) for y in range(self.height)] for x in range(self.width)]
+
+    def generate_river(self):
+        self.grid = [[None for _ in range(self.height)] for _ in range(self.width)]
+        river_orientation = random.randrange(2)
+        if river_orientation == 0:
+            river_range = self.height
+        else:
+            river_range = self.width
+        
+        river_start = random.randrange(3, river_range - 3)
+        river_end = random.randrange(3, river_range - 3)
+
+        for y in range(self.height):
+            for x in range(self.width):
+                if river_orientation == 0:
+                    if y == int(x*(river_start-river_end)/(self.width)+river_start):
+                        self.grid[x][y] = FarmTile(x, y, 2) # water
+                        self.grid[x][y-1] = FarmTile(x, y, 0) # dirt
+                    else:
+                        self.grid[x][y] = FarmTile(x, y, 1) # grass
+                else:
+                    if x == int(y*(river_start-river_end)/(self.width)+river_start):
+                        self.grid[x][y] = FarmTile(x, y, 2) # water
+                        self.grid[x-1][y] = FarmTile(x, y, 0) # dirt
+                    else:
+                        self.grid[x][y] = FarmTile(x, y, 1) # grass
+
+    def generate_tree_river(self):
+        self.generate_river()
+        while True:
+            tree_x = random.randrange(1, self.width - 1)
+            tree_y = random.randrange(1, self.height - 1)
+            if self.grid[tree_x][tree_y].tile_type == 1:
+                break
+        self.grid[tree_x][tree_y] = FarmTile(tree_x, tree_y, 4) # tree
+
+    def generate_grass(self, grass_percentage=0.4):
+        """Generate a grid with dirt and random grass patches.
+   
+        grass_percentage (float): A value between 0 and 1 representing the probability 
+                                  that a tile will be grass.
+    """
+        self.grid = [[FarmTile(x, y, 0) for y in range(self.height)] for x in range(self.width)]  # Initialize grid with dirt
+
+        for x in range(self.width):
+            for y in range(self.height):
+                if random.random() < grass_percentage:  # Randomly assign grass
+                    self.grid[x][y] = FarmTile(x, y, 1)  # Grass tile
+    
+    def __str__(self):
+        '''Returns a text representation of the farm'''
+        farmer_x, farmer_y = self.farmer.get_pos()
+        string = "width={}, height={}\n".format(self.width, self.height)
+        string += "farmer_position={} ({})\n".format((farmer_x, farmer_y), self.grid[farmer_x][farmer_y])
+        string += "farmer_inventory={}\n".format(self.farmer.get_inventory())
+        for y in range(self.height):
+            for x in range(self.width):
+                if (farmer_x, farmer_y) == (x, y):
+                    symbol = self.farmer.symbol
+                else:
+                    symbol = str(self.grid[x][y].tile_type)
+                    
+                string += symbol + ' '
+            string += '\n'
+        return string
+
+    def print(self):
+        print(self)
+
+    def out_of_bounds(self, pos):
+        x, y = pos
+        return not (0 <= x < self.width and 0 <= y < self.height)
+
+    def walkable(self, pos):
+        x, y = pos
+        return not self.out_of_bounds((x, y)) and self.grid[x][y].tile_type < 2
+
+    def add_farmer(self, x=0, y=0):
+        if self.farmer is None:
+            if self.grid[x][y].tile_type < 2 and not self.out_of_bounds((x, y)):
+                self.farmer = Farmer(self, x, y)
+
+    def remove_farmer(self):
+        if self.farmer is not None:
+            self.farmer = None
