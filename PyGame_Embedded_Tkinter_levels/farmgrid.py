@@ -14,7 +14,7 @@ class FarmGrid:
         self.generate_farm()
         self.add_farmer(0, 0)
 
-    def generate_farm(self):        # generate farm based on chosen config type
+    def generate_farm(self):        # generates farm based on chosen config type
         if self.config == 'plain':
             self.generate_plain()
         elif self.config == 'river':
@@ -26,10 +26,12 @@ class FarmGrid:
         else:
             raise ValueError("Unknown farm configuration")
 
-    def generate_plain(self):
+    def generate_plain(self): 
+        """generates plain dirt farm"""
         self.grid = [[FarmTile(x, y, 0) for y in range(self.height)] for x in range(self.width)]
 
     def generate_river(self):
+        """"generates farm with river and dirt along one side of the river. rest of farm is grass"""
         self.grid = [[None for _ in range(self.height)] for _ in range(self.width)]
         river_orientation = random.randrange(2)
         if river_orientation == 0:
@@ -56,6 +58,7 @@ class FarmGrid:
                         self.grid[x][y] = FarmTile(x, y, 1) # grass
 
     def generate_tree_river(self):
+        """"generates a farm with river, dirt along one side, and a tree. rest of farm is grass"""
         self.generate_river()
         while True:
             tree_x = random.randrange(1, self.width - 1)
@@ -66,10 +69,8 @@ class FarmGrid:
 
     def generate_grass(self, grass_percentage=0.4):
         """Generate a grid with dirt and random grass patches.
-   
-        grass_percentage (float): A value between 0 and 1 representing the probability 
-                                  that a tile will be grass.
-    """
+        grass_percentage (float): A value between 0 and 1 representing the probability that a tile will be grass.
+        """
         self.grid = [[FarmTile(x, y, 0) for y in range(self.height)] for x in range(self.width)]  # Initialize grid with dirt
 
         for x in range(self.width):

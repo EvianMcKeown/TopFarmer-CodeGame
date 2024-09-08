@@ -70,7 +70,7 @@ class HomePage(tk.Frame):
         lbl_title = tk.Label(self,text="TopFarmer", font=("Comic Sans MS", 20, "bold"), fg="white", bg="sky blue", anchor=tk.CENTER)
         lbl_title.pack(pady=20)
 
-        '''"Button: New Game'''
+        '''Button: New Game'''
         btn_new_game = tk.Button(self, text= "New Game", bg="white", width=10, anchor=tk.CENTER, command=self.handle_new_game)
         btn_new_game.pack(pady=20)
 

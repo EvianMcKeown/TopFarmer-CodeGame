@@ -12,7 +12,7 @@ class Farmer:
         self.y = y
         
         # Give the farmer 5 of each crop
-        self.inventory = [0, 1, 2] * 5
+        self.inventory = [0, 1, 2] * 10
 
     def __str__(self):
         return self.symbol
