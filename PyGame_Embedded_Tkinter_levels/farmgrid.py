@@ -78,6 +78,12 @@ class FarmGrid:
                 if random.random() < grass_percentage:  # Randomly assign grass
                     self.grid[x][y] = FarmTile(x, y, 1)  # Grass tile
     
+    def restart(self):
+        for x in range(self.width):
+            for y in range(self.height):
+                if self.grid[x][y].tile_type == 3:
+                    self.grid[x][y].tile_type = 0
+    
     def __str__(self):
         '''Returns a text representation of the farm'''
         farmer_x, farmer_y = self.farmer.get_pos()

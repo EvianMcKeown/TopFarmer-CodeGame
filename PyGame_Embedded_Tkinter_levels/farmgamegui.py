@@ -234,7 +234,7 @@ class GamePage(tk.Frame):
     def handle_restart(self):
         print("restart")
         self.txt_code.delete("1.0", "end-1c") # clear input text box
-        self.embed_pygame_o.farm.__init__() # initialise farm
+        self.embed_pygame_o.farm.restart() # restart farm
         #self.controller.frames[GamePage].embed_pygame_o.farm = self.controller.levels.start_level(current_lvl)
 
     def handle_help(self):

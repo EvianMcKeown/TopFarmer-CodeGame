@@ -1,2 +1,2 @@
 restart goes to first lvl
-new game does not display first task
+new game does not display first task [FIXED (i think)]
