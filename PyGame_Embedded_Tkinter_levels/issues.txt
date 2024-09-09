@@ -1,2 +1,6 @@
-restart goes to first lvl
-new game does not display first task [FIXED (i think)]
+restart goes to first lvl [FIXED]
+new game does not display first task [FIXED]
+farm stats reset with each level
+    - happens because farm is initialised
+    - possible fix: restore stats on init (save to file)
+                    or store stats elsewhere

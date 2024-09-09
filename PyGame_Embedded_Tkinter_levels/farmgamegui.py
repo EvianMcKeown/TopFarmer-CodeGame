@@ -191,6 +191,7 @@ class GamePage(tk.Frame):
     def display_level_task(self):
         task = self.controller.levels.get_current_task()
         messagebox.showinfo(f"Level {self.controller.levels.current_level} Task", task)
+        
     def update_inventory(self):
         potatoes = self.embed_pygame_o.farm.farmer.inventory.count(0)
         carrots = self.embed_pygame_o.farm.farmer.inventory.count(1)
