@@ -104,6 +104,7 @@ class HomePage(tk.Frame):
             the instance of embed_pygame that contains
             the farm data. I will forget how this works.'''
             self.controller.show_frame(GamePage) # switch to game page
+            self.controller.frames[GamePage].display_level_task()
         else:
             pass
 
