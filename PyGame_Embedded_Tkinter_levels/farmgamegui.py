@@ -238,7 +238,8 @@ class GamePage(tk.Frame):
 
     def handle_help(self):
         print("help")
-        messagebox.showinfo(title="How to play", message="How to play...\n(coming soon)")
+        #messagebox.showinfo(title="How to play", message="How to play...\n(coming soon)")
+        self.display_level_task()
 
     def handle_home(self):
         print("home")
