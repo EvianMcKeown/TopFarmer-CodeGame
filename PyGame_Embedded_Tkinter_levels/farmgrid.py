@@ -1,6 +1,6 @@
 import random
 from farmer import Farmer
-from farmtile import FarmTile
+from farmtile import FarmTile, CropTile
 from stats import FarmStats
 
 class FarmGrid:
@@ -23,6 +23,8 @@ class FarmGrid:
             self.generate_tree_river()
         elif self.config == 'grass':
             self.generate_grass()
+        elif self.config == 'crops':
+            self.generate_crops()
         else:
             raise ValueError("Unknown farm configuration")
 
@@ -77,6 +79,14 @@ class FarmGrid:
             for y in range(self.height):
                 if random.random() < grass_percentage:  # Randomly assign grass
                     self.grid[x][y] = FarmTile(x, y, 1)  # Grass tile
+    
+    def generate_crops(self): 
+        """generates plain dirt farm with crops"""
+        self.grid = [[FarmTile(x, y, 0) for y in range(self.height)] for x in range(self.width)]
+        for x in range(self.width):
+            for y in range(self.height):
+                if random.random() < 0.2:
+                     self.grid[x][y] = CropTile(x, y, random.randrange(100) % 3)
     
     def restart(self):
         for x in range(self.width):
