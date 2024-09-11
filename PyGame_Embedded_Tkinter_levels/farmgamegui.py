@@ -132,14 +132,15 @@ class GamePage(tk.Frame):
     def __init__(self, parent, controller): 
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        self.config(bg="sky blue")
         #self.levels = Levels()  # Initialize Levels
         self.current_farm_config = self.controller.levels.get_current_config()
         #self.embed_pygame_o = embed_pygame.EmbedPygame(config=self.current_farm_config)  # Pass config
         # frame for user input
-        frm_input = tk.Frame(self)
+        frm_input = tk.Frame(self, bg="sky blue")
 
         # label for text box
-        lbl_code = tk.Label(frm_input, text="Enter code here:")
+        lbl_code = tk.Label(frm_input, text="Enter code here:", bg="sky blue")
         lbl_code.pack(anchor="w")
 
         # text box for user code input
@@ -178,6 +179,7 @@ class GamePage(tk.Frame):
         def pygame_loop():
             while True:
                 self.embed_pygame_o.update()
+                self.update_inventory()
 
         thread = threading.Thread(target=pygame_loop)
         thread.start()
@@ -321,7 +323,7 @@ class StatisticsPage(tk.Frame):
         lbl_title.pack(anchor="center", side="top", pady=20)
 
         '''Frame: Statistics'''
-        self.frm_stats = tk.Frame(self, padx=10, pady=10)
+        self.frm_stats = tk.Frame(self, bg="lime green",padx=10, pady=10)
 
         PADX = 1
         PADY = 1
