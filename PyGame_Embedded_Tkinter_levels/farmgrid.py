@@ -89,6 +89,7 @@ class FarmGrid:
                      self.grid[x][y] = CropTile(x, y, random.randrange(100) % 3)
     
     def restart(self):
+        self.farmer.x, self.farmer.y = 0, 0
         for x in range(self.width):
             for y in range(self.height):
                 if self.grid[x][y].tile_type == 3:

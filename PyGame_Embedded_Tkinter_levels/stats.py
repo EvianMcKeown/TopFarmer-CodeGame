@@ -95,6 +95,8 @@ class FarmStats:
     
     def check_potatoes_in_row(self, count):
         #  check if there are 'count' potatoes in a row
+        ver = False
+        hor = False
         for y in range(self.farm.height):
             consecutive = 0
             for x in range(self.farm.width):
@@ -102,7 +104,19 @@ class FarmStats:
                 if tile.tile_type == 3 and tile.crop_type == 0:  # 0 for potato
                     consecutive += 1
                     if consecutive == count:
-                        return True
+                        hor = True
                 else:
                     consecutive = 0
-        return False
+        
+        for x in range(self.farm.height):
+            consecutive = 0
+            for y in range(self.farm.width):
+                tile = self.farm.grid[x][y]
+                if tile.tile_type == 3 and tile.crop_type == 0:  # 0 for potato
+                    consecutive += 1
+                    if consecutive == count:
+                        ver = True
+                else:
+                    consecutive = 0
+
+        return ver or hor
