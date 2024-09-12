@@ -1,7 +1,7 @@
 #farmgamegui.py
 
 import tkinter as tk
-from tkinter import ttk
+import tkinter.font as tkfont
 from tkinter import messagebox
 import os
 import threading
@@ -59,6 +59,7 @@ class FarmGameGUI(tk.Tk):
         self.saveandload.save_code(self.frames[GamePage].txt_code.get(1.0, "end-1c"))
         self.frames[GamePage].embed_pygame_o.exit()
         self.destroy()
+        exit(0)
 
 class HomePage(tk.Frame):
     def __init__(self, parent, controller):
@@ -145,6 +146,9 @@ class GamePage(tk.Frame):
 
         # text box for user code input
         self.txt_code = tk.Text(frm_input, width=50, height=24)
+        font = tkfont.Font(font=self.txt_code['font'])  # tab config
+        tab = font.measure('    ')                      # tab config
+        self.txt_code.config(tabs=tab)                  # tab config
         self.txt_code.pack(anchor="w")
         self.txt_code.insert("1.0", controller.saveandload.load_code())
 
@@ -152,12 +156,14 @@ class GamePage(tk.Frame):
         btn_run = tk.Button(frm_input, text="Run", width=5, command=self.handle_run)
         btn_clear = tk.Button(frm_input, text="Clear", width=5, command=self.handle_clear)
         btn_restart = tk.Button(frm_input, text="Restart",width=5, command=self.handle_restart)
+        btn_task = tk.Button(frm_input, text="Task", width=5, command=self.handle_task)
         btn_help = tk.Button(frm_input, text="Help", width=5, command=self.handle_help)
         btn_home = tk.Button(frm_input, text="Home", width=5, command=self.handle_home)
 
         btn_run.pack(anchor="s", side="left", pady=5)
         btn_clear.pack(anchor="s", side="left", pady=5)
         btn_restart.pack(anchor="s", side="left", pady=5)
+        btn_task.pack(anchor="s", side="left", pady=5)
         btn_help.pack(anchor="s", side="left", pady=5)
         btn_home.pack(anchor="s", side="left", pady=5)
 
@@ -181,8 +187,8 @@ class GamePage(tk.Frame):
                 self.embed_pygame_o.update()
                 self.update_inventory()
 
-        thread = threading.Thread(target=pygame_loop)
-        thread.start()
+        self.thread = threading.Thread(target=pygame_loop)
+        self.thread.start()
 
     def start_level(self, level_number):
         self.controller.levels.current_level = level_number
@@ -242,7 +248,19 @@ class GamePage(tk.Frame):
 
     def handle_help(self):
         print("help")
-        #messagebox.showinfo(title="How to play", message="How to play...\n(coming soon)")
+        try:
+            file = open("tutorial.txt", "r")
+            win_tut = tk.Tk()
+            win_tut.title("Tutorial")
+            lbl_tut = tk.Label(win_tut, text=file.read(), justify="left", font=('Arial', 9))
+            lbl_tut.pack()
+            win_tut.mainloop()
+            file.close()
+        except IOError:
+            print("Error: Could not write file")
+    
+    def handle_task(self):
+        print("task")
         self.display_level_task()
 
     def handle_home(self):
