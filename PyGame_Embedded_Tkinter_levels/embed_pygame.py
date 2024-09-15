@@ -84,9 +84,10 @@ class EmbedPygame:
                     pygame.draw.rect(self.surface, color, pygame.Rect(
                     x * self.SCALE_FACTOR, y * self.SCALE_FACTOR, self.SCALE_FACTOR, self.SCALE_FACTOR))
 
-   
-                farmer_x, farmer_y = self.farm.farmer.get_pos()
-                self.graphics.render_farmer(self.surface, farmer_x, farmer_y)
+                if self.farm.farmer is not None:
+                    farmer_x, farmer_y = self.farm.farmer.get_pos()   
+                    self.graphics.render_farmer(self.surface, farmer_x, farmer_y)
+                
              
                 #  re-render grid lines
                 self.render_grid(self.SCREEN_WIDTH, self.SCREEN_HEIGHT, self.SCALE_FACTOR)
@@ -100,7 +101,6 @@ class EmbedPygame:
         indentation_stack = []
 
         if self.slow_mode: # slow mode on, execute line by line
-            #print("SLOWMODE ON")
             #loop through lines of userinput code
             for line in code_lines:
                 stripped_line = line.strip()
@@ -121,7 +121,6 @@ class EmbedPygame:
                     if indentation_stack and indentation_level < indentation_stack[-1]:
                         indentation_stack.pop()
         else:
-            #print("SLOWMODE OFF")
             final_code = code  # slow mode off, execute all at once
         # print full code to terminal
         print(final_code)
@@ -131,7 +130,7 @@ class EmbedPygame:
             exec(final_code, {'time': time, 'farm': self.farm, 'update': self.update, 'pygame': pygame})
         except Exception as e:
             print(f"Error: {e}")
-
+ 
 
     def update(self):
         self.render_farm()

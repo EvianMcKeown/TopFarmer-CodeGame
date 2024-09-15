@@ -93,8 +93,9 @@ class FarmStats:
     def get_total_harvested(self):
         return self.potatoes_harvested + self.carrots_harvested + self.pumpkins_harvested
     
+## stats and check functions specifically for the level checks found in Level class ##
     def check_potatoes_in_row(self, count):
-        #  check if there are 'count' potatoes in a row
+        #  check if there are 'count' potatoes in a row/col
         ver = False
         hor = False
         for y in range(self.farm.height):
@@ -120,3 +121,5 @@ class FarmStats:
                     consecutive = 0
 
         return ver or hor
+
+    

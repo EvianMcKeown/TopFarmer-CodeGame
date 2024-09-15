@@ -11,7 +11,7 @@ class Farmer:
         self.x = x
         self.y = y
         
-        # Give the farmer 5 of each crop
+        # Give the farmer 10 of each crop
         self.inventory = [0, 1, 2] * 10
 
     def __str__(self):

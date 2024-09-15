@@ -106,20 +106,26 @@ class FarmGrid:
     
     def generate_crops(self):
         """Generates a plain dirt farm with randomly placed crops."""
-        self.grid = [[None for _ in range(self.height)] for _ in range(self.width)]
         self.generate_plain()
+        
         # Initialize grid with plain dirt
         #self.grid = [[FarmTile(x, y, 0) for y in range(self.height)] for x in range(self.width)]
+        for x in range(self.width):
+            for y in range(self.height):
+                if self.grid[x][y].tile_type == 3:  # If the tile is a crop
+                    self.grid[x][y].tile_type = 0  # Reset it to dirt
         
-        avail_positions = [(x, y) for x in range(self.width) for y in range(self.height)]  # possible positions
+        avail_positions = [(x, y) for x in range(self.width) for y in range(self.height) if ((x,y) != (0,0))]  # possible positions except farmer initial position
         
         crop_count = int(self.width * self.height * 0.2)  # 20% of the grid will have crops on it
         random.shuffle(avail_positions)  # Shuffle the available positions to randomize crop placement
         
         for _ in range(crop_count):
             if avail_positions:
+                
                 x, y = avail_positions.pop()  # pop from list and get random available position
-                self.grid[x][y] = CropTile(x, y, random.randrange(100) % 3) 
+                if self.grid[x][y].tile_type == 0 and self.grid[x][y].tile_type != 3:
+                    self.grid[x][y] = CropTile(x, y, random.randrange(100) % 3) 
 
     
     def restart(self):

@@ -243,13 +243,39 @@ class GamePage(tk.Frame):
         if code == "": # check if user has entered code
             messagebox.showerror(title="ERROR!", message="There is no code to run.")
         else:
-            self.embed_pygame_o.execute_python_code(code)  # execute user code
+            if self.controller.levels.get_test_cases()==False:  #handle single test cases
+                self.embed_pygame_o.execute_python_code(code)  # execute user code
 
-            if self.controller.levels.check_current_level_completion(self.embed_pygame_o.farm.stats): # check if level is completed
-                self.level_completed()
-                self.controller.frames[LevelsPage].update_level_buttons() 
-            else:
-                self.level_failed()
+                if self.controller.levels.check_current_level_completion(self.embed_pygame_o.farm.stats): # check if level is completed
+                    self.level_completed()
+                    self.controller.frames[LevelsPage].update_level_buttons() 
+                else:
+                    self.level_failed()
+            else:  # Handle multiple test cases
+                # Retrieve the number of test cases for the current level
+                num_test_cases = 3  # You want to run 3 test cases
+                all_passed = True
+
+                for _ in range(num_test_cases):
+                    # Execute the user code
+                    self.embed_pygame_o.execute_python_code(code)
+                    
+                    # Check if the level is completed for the current test case
+                    if not self.controller.levels.check_current_level_completion(self.embed_pygame_o.farm.stats):
+                        all_passed = False
+                        break  # Exit loop if any test case fails
+
+                    # Restart the farm for the next test case
+                    self.embed_pygame_o.farm = FarmGrid(self.embed_pygame_o.FARM_WIDTH, self.embed_pygame_o.FARM_HEIGHT, config=self.controller.levels.get_current_config())
+                
+                # Call the appropriate method based on whether all test cases passed
+                if all_passed:
+                    self.level_completed()
+                    self.controller.frames[LevelsPage].update_level_buttons()
+                else:
+                    self.level_failed()
+                       
+
     def level_completed(self):
         response = messagebox.askyesno("Level Complete", "Woohoo! Great job. Proceed to the next level?")
         if response:
