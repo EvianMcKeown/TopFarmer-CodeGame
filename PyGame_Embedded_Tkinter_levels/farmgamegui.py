@@ -257,7 +257,7 @@ class GamePage(tk.Frame):
             win_tut.mainloop()
             file.close()
         except IOError:
-            print("Error: Could not write file")
+            print("Error: Could not read file")
     
     def handle_task(self):
         print("task")
