@@ -1,7 +1,7 @@
 #farmgamegui.py
 
 import tkinter as tk
-from tkinter import ttk
+import tkinter.font as tkfont
 from tkinter import messagebox
 import os
 import threading
@@ -9,6 +9,7 @@ import embed_pygame
 from saveandload import SaveAndLoad
 from level import Levels
 from farmgrid import FarmGrid
+import time
 class FarmGameGUI(tk.Tk):
 
     # __init__ function for class FarmGame 
@@ -17,7 +18,7 @@ class FarmGameGUI(tk.Tk):
         # __init__ function for class Tk
         tk.Tk.__init__(self, *args, **kwargs)
 
-        SCREEN_WIDTH=900
+        SCREEN_WIDTH=1000
         SCREEN_HEIGHT=500
         self.title("FarmGame")
         self.geometry("{}x{}".format(SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -59,6 +60,7 @@ class FarmGameGUI(tk.Tk):
         self.saveandload.save_code(self.frames[GamePage].txt_code.get(1.0, "end-1c"))
         self.frames[GamePage].embed_pygame_o.exit()
         self.destroy()
+        exit(0)
 
 class HomePage(tk.Frame):
     def __init__(self, parent, controller):
@@ -104,6 +106,7 @@ class HomePage(tk.Frame):
             the instance of embed_pygame that contains
             the farm data. I will forget how this works.'''
             self.controller.show_frame(GamePage) # switch to game page
+            self.controller.frames[GamePage].display_level_task()
         else:
             pass
 
@@ -131,55 +134,91 @@ class GamePage(tk.Frame):
     def __init__(self, parent, controller): 
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        #self.levels = Levels()  # Initialize Levels
-        self.current_farm_config = self.controller.levels.get_current_config()
-        #self.embed_pygame_o = embed_pygame.EmbedPygame(config=self.current_farm_config)  # Pass config
-        # frame for user input
-        frm_input = tk.Frame(self)
+        self.config(bg="sky blue")
+        self.lock = threading.Lock()
 
-        # label for text box
-        lbl_code = tk.Label(frm_input, text="Enter code here:")
-        lbl_code.pack(anchor="w")
+        # Frame for user input
+        frm_input = tk.Frame(self, bg="sky blue", width=400, height=300)
+        frm_input.pack_propagate(False)  # prevent frame from resizing
 
-        # text box for user code input
-        self.txt_code = tk.Text(frm_input, width=50, height=24)
-        self.txt_code.pack(anchor="w")
+        # Label for text box
+        lbl_code = tk.Label(frm_input, text="Enter code here:", bg="sky blue")
+        lbl_code.grid(row=0, column=0, sticky="w", padx=5, pady=5)
+
+        # Scrollbar creation (vertical and horizontal)
+        scrollbar_y = tk.Scrollbar(frm_input)
+        scrollbar_x = tk.Scrollbar(frm_input, orient="horizontal")
+
+        # Text box for user code input ( vertically and horizontally scrollable, no text wrapping)
+        self.txt_code = tk.Text(frm_input, width=50, height=24, wrap="none",yscrollcommand=scrollbar_y.set, xscrollcommand=scrollbar_x.set)
+        font = tkfont.Font(font=self.txt_code['font'])  # Tab config
+        tab = font.measure('    ')                      # Tab config
+        self.txt_code.config(tabs=tab)                  # Tab config
+        self.txt_code.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
+
+        # Scrollbars config
+        scrollbar_y.grid(row=1, column=1, sticky="ns")
+        scrollbar_x.grid(row=2, column=0, sticky="ew")
+        scrollbar_y.config(command=self.txt_code.yview)
+        scrollbar_x.config(command=self.txt_code.xview)
+
+        # Configure gui grid to allow expansion of text box
+        frm_input.grid_rowconfigure(1, weight=1)
+        frm_input.grid_columnconfigure(0, weight=1)
+
+        # Load saved code
         self.txt_code.insert("1.0", controller.saveandload.load_code())
 
-        # buttons for control/navigation
-        btn_run = tk.Button(frm_input, text="Run", width=5, command=self.handle_run)
-        btn_clear = tk.Button(frm_input, text="Clear", width=5, command=self.handle_clear)
-        btn_restart = tk.Button(frm_input, text="Restart",width=5, command=self.handle_restart)
-        btn_help = tk.Button(frm_input, text="Help", width=5, command=self.handle_help)
-        btn_home = tk.Button(frm_input, text="Home", width=5, command=self.handle_home)
+        # Frame for buttons
+        frm_buttons = tk.Frame(self, bg="sky blue")
+        frm_buttons.pack(side="bottom", fill="x", padx=15, pady=10)
 
-        btn_run.pack(anchor="s", side="left", pady=5)
-        btn_clear.pack(anchor="s", side="left", pady=5)
-        btn_restart.pack(anchor="s", side="left", pady=5)
-        btn_help.pack(anchor="s", side="left", pady=5)
-        btn_home.pack(anchor="s", side="left", pady=5)
+        # Buttons for control/navigation
+        btn_run = tk.Button(frm_buttons, text="Run", width=5, command=self.handle_run)
+        btn_clear = tk.Button(frm_buttons, text="Clear", width=5, command=self.handle_clear)
+        btn_restart = tk.Button(frm_buttons, text="Restart", width=5, command=self.handle_restart)
+        btn_task = tk.Button(frm_buttons, text="Task", width=5, command=self.handle_task)
+        btn_help = tk.Button(frm_buttons, text="Help", width=5, command=self.handle_help)
+        btn_home = tk.Button(frm_buttons, text="Home", width=5, command=self.handle_home)
 
-        frm_input.pack(anchor="nw", side="left", padx=20, pady=10) # pack input frame
+        # Pack buttons under input text box
+        btn_run.pack(side="left", padx=5)
+        btn_clear.pack(side="left", padx=5)
+        btn_restart.pack(side="left", padx=5)
+        btn_task.pack(side="left", padx=5)
+        btn_help.pack(side="left", padx=5)
+        btn_home.pack(side="left", padx=5)
 
-        # label with farmer inventory
+        # Pack input frame
+        frm_input.pack(anchor="nw", side="left", padx=20, pady=10, fill="both", expand=True)
+
+        # Label with farmer inventory
         self.lbl_inventory = tk.Label(self)
         self.lbl_inventory.pack(side="top", padx=5, pady=5)
 
-        # frame for embedded pygame display (do not question its magic)
+        # Frame for embedded Pygame display
         frm_embed = tk.Frame(self, width=410, height=410)
         frm_embed.pack(anchor="ne", side="top", padx=20, pady=0)
         self.grid()
         os.environ['SDL_WINDOWID'] = str(frm_embed.winfo_id())
         self.update()
-        self.embed_pygame_o = embed_pygame.EmbedPygame() # create instance of embed_pygame
+
+        # Create an instance of embed_pygame
+        self.embed_pygame_o = embed_pygame.EmbedPygame()
+
+         # Start pygame loop in separate thread
+        self.thread = threading.Thread(target=self.pygame_loop)
+        self.thread.start()
         
         # a cheap/lazy way of preventing deadlock
-        def pygame_loop():
-            while True:
+    def pygame_loop(self):
+        while True:
+            with self.lock:
+                #if self.embed_pygame_o.farm and self.embed_pygame_o.farm.farmer:
                 self.embed_pygame_o.update()
-
-        thread = threading.Thread(target=pygame_loop)
-        thread.start()
+                self.update_inventory()
+            time.sleep(0.01)
+                
 
     def start_level(self, level_number):
         self.controller.levels.current_level = level_number
@@ -190,11 +229,13 @@ class GamePage(tk.Frame):
     def display_level_task(self):
         task = self.controller.levels.get_current_task()
         messagebox.showinfo(f"Level {self.controller.levels.current_level} Task", task)
+        
     def update_inventory(self):
-        potatoes = self.embed_pygame_o.farm.farmer.inventory.count(0)
-        carrots = self.embed_pygame_o.farm.farmer.inventory.count(1)
-        pumpkins = self.embed_pygame_o.farm.farmer.inventory.count(2)
-        self.lbl_inventory.config(text="Inventory: Potatoes: {}, Carrots: {}, Pumpkins: {}".format(potatoes, carrots, pumpkins))
+        if self.embed_pygame_o.farm and self.embed_pygame_o.farm.farmer:
+            potatoes = self.embed_pygame_o.farm.farmer.inventory.count(0)
+            carrots = self.embed_pygame_o.farm.farmer.inventory.count(1)                
+            pumpkins = self.embed_pygame_o.farm.farmer.inventory.count(2)
+            self.lbl_inventory.config(text="  INVENTORY:  Potatoes: {},  Carrots: {},  Pumpkins: {}  ".format(potatoes, carrots, pumpkins))
 
     def handle_run(self):
         print("run")
@@ -202,14 +243,15 @@ class GamePage(tk.Frame):
         if code == "": # check if user has entered code
             messagebox.showerror(title="ERROR!", message="There is no code to run.")
         else:
-            self.embed_pygame_o.execute_python_code(code) # execute user code
+            self.embed_pygame_o.execute_python_code(code)  # execute user code
+
             if self.controller.levels.check_current_level_completion(self.embed_pygame_o.farm.stats): # check if level is completed
                 self.level_completed()
-                self.controller.frames[LevelsPage].update_level_buttons()
+                self.controller.frames[LevelsPage].update_level_buttons() 
             else:
                 self.level_failed()
     def level_completed(self):
-        response = messagebox.askyesno("Level Completed", "Yippee! You completed the level. Proceed to the next level?")
+        response = messagebox.askyesno("Level Complete", "Woohoo! Great job. Proceed to the next level?")
         if response:
             self.controller.levels.advance_to_next_level()
             self.start_level(self.controller.levels.current_level)
@@ -219,7 +261,7 @@ class GamePage(tk.Frame):
             pass
 
     def level_failed(self):
-        response = messagebox.askretrycancel("Level Failed", "Ruh roh! You didn't complete the task. Retry?")
+        response = messagebox.askretrycancel("Level Failed", "Oops! You didn't quite complete the task. Retry?")
         if response:
             # Reset the level
             self.start_level(self.controller.levels.current_level)
@@ -231,14 +273,28 @@ class GamePage(tk.Frame):
         self.txt_code.delete("1.0", "end-1c") # clear user code input text box
 
     def handle_restart(self):
-        print("restart")
-        self.txt_code.delete("1.0", "end-1c") # clear input text box
-        self.embed_pygame_o.farm.__init__() # initialise farm
-        #self.controller.frames[GamePage].embed_pygame_o.farm = self.controller.levels.start_level(current_lvl)
-
+        print("restart (farmgamegui)")
+        if self.embed_pygame_o.farm:
+            self.embed_pygame_o.farm.restart() # restart farm
+            self.start_level(self.controller.levels.current_level)
+        #self.controller.frames[GamePage].embed_pygame_o.farm = self.controller.levels.start_level(self.controller.levels.current_level) #stuf
+        
     def handle_help(self):
         print("help")
-        messagebox.showinfo(title="How to play", message="How to play...\n(coming soon)")
+        try:
+            file = open("tutorial.txt", "r")
+            win_tut = tk.Tk()
+            win_tut.title("Tutorial")
+            lbl_tut = tk.Label(win_tut, text=file.read(), justify="left", font=('Arial', 9))
+            lbl_tut.pack()
+            win_tut.mainloop()
+            file.close()
+        except IOError:
+            print("Error: Could not write file")
+    
+    def handle_task(self):
+        print("task")
+        self.display_level_task()
 
     def handle_home(self):
         print("home")
@@ -248,14 +304,15 @@ class GamePage(tk.Frame):
 class LevelsPage(tk.Frame):
     def __init__(self, parent, controller): 
         tk.Frame.__init__(self, parent)
+        #self.config(bg="green")
         self.controller = controller
 
         self.level_buttons = []
 
         btn_home = tk.Button(self, text="Home", command=self.handle_home)
         btn_home.pack(anchor="nw")
-
-        for level_number in range(1, 5):  # level buttons
+        max_levels = 8 # change this when adding more levels
+        for level_number in range(1, max_levels+1):  # level buttons
             btn = tk.Button(self, text=f"Level {level_number}", command=lambda ln=level_number: self.start_level(ln))
             self.level_buttons.append(btn)
             btn.pack(anchor="center")
@@ -275,34 +332,10 @@ class LevelsPage(tk.Frame):
                 btn.config(state='disabled')
 
     def start_level(self, level_number):
+        print("start level:", level_number)
         self.controller.frames[GamePage].start_level(level_number)
         self.controller.show_frame(GamePage)
     
-  #  def handle_lvl1(self):
-   #     print("lvl1")
-    #    # TODO: load level 1
-     #   self.controller.frames[GamePage].embed_pygame_o.farm = self.controller.levels.start_level(1)
-      #  self.controller.show_frame(GamePage)
-    
-    #def handle_lvl2(self):
-     #   print("lvl2")
-        # TODO: load level 2
-      #  self.controller.frames[GamePage].embed_pygame_o.farm = self.controller.levels.start_level(2)
-       # self.controller.show_frame(GamePage)
-    
-   # def handle_lvl3(self):
-    #    print("lvl3")
-        # TODO: load level 3
-     #   self.controller.frames[GamePage].embed_pygame_o.farm = self.controller.levels.start_level(3)
-      #  self.controller.show_frame(GamePage)
-    
-   # def handle_lvl4(self):
-    #    print("lvl4")
-        # TODO: load level 4
-     #   self.controller.frames[GamePage].embed_pygame_o.farm = self.controller.levels.start_level(4)
-      #  self.controller.show_frame(GamePage)
-
-# TODO : Add statistics functionality 
 class StatisticsPage(tk.Frame):
     def __init__(self, parent, controller): 
         tk.Frame.__init__(self, parent)
@@ -318,7 +351,7 @@ class StatisticsPage(tk.Frame):
         lbl_title.pack(anchor="center", side="top", pady=20)
 
         '''Frame: Statistics'''
-        self.frm_stats = tk.Frame(self, padx=10, pady=10)
+        self.frm_stats = tk.Frame(self, bg="lime green",padx=10, pady=10)
 
         PADX = 1
         PADY = 1

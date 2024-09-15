@@ -1,6 +1,6 @@
 import random
 from farmer import Farmer
-from farmtile import FarmTile
+from farmtile import FarmTile, CropTile
 from stats import FarmStats
 
 class FarmGrid:
@@ -14,6 +14,7 @@ class FarmGrid:
         self.generate_farm()
         self.add_farmer(0, 0)
 
+
     def generate_farm(self):        # generates farm based on chosen config type
         if self.config == 'plain':
             self.generate_plain()
@@ -23,6 +24,12 @@ class FarmGrid:
             self.generate_tree_river()
         elif self.config == 'grass':
             self.generate_grass()
+        elif self.config == 'crops':
+            self.generate_crops()
+        elif self.config == 'tree_dirt':
+            self.generate_tree_dirt()
+        elif self.config == 'tree_grass':
+            self.generate_tree_grass()
         else:
             raise ValueError("Unknown farm configuration")
 
@@ -59,6 +66,7 @@ class FarmGrid:
 
     def generate_tree_river(self):
         """"generates a farm with river, dirt along one side, and a tree. rest of farm is grass"""
+        self.grid = [[None for _ in range(self.height)] for _ in range(self.width)]
         self.generate_river()
         while True:
             tree_x = random.randrange(1, self.width - 1)
@@ -67,10 +75,28 @@ class FarmGrid:
                 break
         self.grid[tree_x][tree_y] = FarmTile(tree_x, tree_y, 4) # tree
 
+    def generate_tree_dirt(self):
+        """Generates a dirt farm with three randomly placed trees."""
+        self.grid = [[None for _ in range(self.height)] for _ in range(self.width)]
+        # Initialize the grid with plain dirt
+        self.grid = [[FarmTile(x, y, 0) for y in range(self.height)] for x in range(self.width)]
+
+        tree_count = 0
+        while tree_count < 3:
+            tree_x = random.randrange(1, self.width - 1)
+            tree_y = random.randrange(1, self.height - 1)
+            
+            # CHECK IF tile is not already a tree
+            if self.grid[tree_x][tree_y].tile_type == 0:  
+                self.grid[tree_x][tree_y] = FarmTile(tree_x, tree_y, 4)  
+                tree_count += 1
+
+
     def generate_grass(self, grass_percentage=0.4):
         """Generate a grid with dirt and random grass patches.
         grass_percentage (float): A value between 0 and 1 representing the probability that a tile will be grass.
         """
+        self.grid = [[None for _ in range(self.height)] for _ in range(self.width)]
         self.grid = [[FarmTile(x, y, 0) for y in range(self.height)] for x in range(self.width)]  # Initialize grid with dirt
 
         for x in range(self.width):
@@ -78,6 +104,38 @@ class FarmGrid:
                 if random.random() < grass_percentage:  # Randomly assign grass
                     self.grid[x][y] = FarmTile(x, y, 1)  # Grass tile
     
+    def generate_crops(self):
+        """Generates a plain dirt farm with randomly placed crops."""
+        self.grid = [[None for _ in range(self.height)] for _ in range(self.width)]
+        self.generate_plain()
+        # Initialize grid with plain dirt
+        #self.grid = [[FarmTile(x, y, 0) for y in range(self.height)] for x in range(self.width)]
+        
+        avail_positions = [(x, y) for x in range(self.width) for y in range(self.height)]  # possible positions
+        
+        crop_count = int(self.width * self.height * 0.2)  # 20% of the grid will have crops on it
+        random.shuffle(avail_positions)  # Shuffle the available positions to randomize crop placement
+        
+        for _ in range(crop_count):
+            if avail_positions:
+                x, y = avail_positions.pop()  # pop from list and get random available position
+                self.grid[x][y] = CropTile(x, y, random.randrange(100) % 3) 
+
+    
+    def restart(self):
+        print("RESTART(farmgrid)")
+        #self.farmer.x, self.farmer.y = 0, 0
+        #for x in range(self.width):
+         #   for y in range(self.height):
+          #      if self.grid[x][y].tile_type == 3:
+           #         self.grid[x][y].tile_type = 0
+        self.grid = []
+        self.generate_farm()  # Regenerate the farm grid
+        if self.farmer is None: 
+            self.add_farmer(0, 0)  # Add farmer back at the starting position
+        else:
+            self.farmer.x, self.farmer.y = 0, 0  # Reset farmer position
+        
     def __str__(self):
         '''Returns a text representation of the farm'''
         farmer_x, farmer_y = self.farmer.get_pos()
@@ -110,6 +168,9 @@ class FarmGrid:
         if self.farmer is None:
             if self.grid[x][y].tile_type < 2 and not self.out_of_bounds((x, y)):
                 self.farmer = Farmer(self, x, y)
+                print("farmer added at ({}, {})".format(x, y))
+        else: # farmer already exists
+            self.farmer.x, self.farmer.y = x, y
 
     def remove_farmer(self):
         if self.farmer is not None:

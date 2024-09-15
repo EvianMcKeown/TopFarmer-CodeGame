@@ -1,2 +1,22 @@
-restart goes to first lvl
-new game does not display first task
+# restart goes to first lvl [FIXED]
+# new game does not display first task [FIXED]
+# farm stats reset with each level
+    - happens because farm is initialised
+    - possible fix: restore stats on init (save to file)
+                    or store stats elsewhere
+
+# unlocked lvls must be saved and loaded also.
+# "restart" needs to reset inventory. retry after level failure resets inventory successfully
+# crop farm config does not reset correctly. 
+# crop farm config sometimes places several crops on one tile [FIXED]
+# when selecting another lvl from lvl page, sometimes old tiles remain. eg: grass farm into crop farm config-> grass shows behind some crop
+	to see: choose lvl 7 then lvl 5 from lvl page.....then restarting places crops on top of eachother still, restart too many times and game 	crashes with error:\CodeGame-Capstone-brunch\PyGame_Embedded_Tkinter_levels\embed_pygame.py", line 88, in render_farm
+    farmer_x, farmer_y = self.farm.farmer.get_pos()
+                         ^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+
+REFACTORINGS TO FIX DEADLOCKS N STUFF - possible reason for not updating properly
+join threads, terminate then exit
+locks maybe idk? could be stale data causing crop farm config issues
+

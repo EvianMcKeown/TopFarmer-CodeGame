@@ -20,7 +20,6 @@ class EmbedPygame:
     # tile colors
     DIRT = (182, 137, 98)
     GRASS = (192, 212, 112)
-    #WATER = (30,144,255)
     WATER = (155, 212, 195)
     CROP = (255,69,0)
     TREE = (18, 55, 11)
@@ -76,21 +75,21 @@ class EmbedPygame:
                 elif tile.tile_type == 2:  # water tile
                     color = self.WATER
                 elif tile.tile_type == 3:  # crop tile
-                    #crop_colors = [self.POTATO, self.CARROT, self.PUMPKIN]
-                    #color = crop_colors[tile.crop_type]
                     self.graphics.render_crop(self.surface, tile.crop_type, x, y)    
                 elif tile.tile_type == 4:  # tree tile
-                    color = self.TREE
+                    self.graphics.render_tree(self.surface, x, y)
                 
-                 # Draw the tile with color if not crop or farmer
+                 # Draw the tile with color if not crop,tree or farmer
                 if color:
                     pygame.draw.rect(self.surface, color, pygame.Rect(
                     x * self.SCALE_FACTOR, y * self.SCALE_FACTOR, self.SCALE_FACTOR, self.SCALE_FACTOR))
 
-        farmer_x, farmer_y = self.farm.farmer.get_pos()
-        self.graphics.render_farmer(self.surface, farmer_x, farmer_y)
-        #  re-render grid lines
-        self.render_grid(self.SCREEN_WIDTH, self.SCREEN_HEIGHT, self.SCALE_FACTOR)
+   
+                farmer_x, farmer_y = self.farm.farmer.get_pos()
+                self.graphics.render_farmer(self.surface, farmer_x, farmer_y)
+             
+                #  re-render grid lines
+                self.render_grid(self.SCREEN_WIDTH, self.SCREEN_HEIGHT, self.SCALE_FACTOR)
 
     def execute_python_code(self, code):
         """injects user input code into program and executes it either line by line(slow mode) or all at once(slow mode off)"""
@@ -101,7 +100,7 @@ class EmbedPygame:
         indentation_stack = []
 
         if self.slow_mode: # slow mode on, execute line by line
-            print("SLOWMODE ON")
+            #print("SLOWMODE ON")
             #loop through lines of userinput code
             for line in code_lines:
                 stripped_line = line.strip()
@@ -122,6 +121,7 @@ class EmbedPygame:
                     if indentation_stack and indentation_level < indentation_stack[-1]:
                         indentation_stack.pop()
         else:
+            #print("SLOWMODE OFF")
             final_code = code  # slow mode off, execute all at once
         # print full code to terminal
         print(final_code)

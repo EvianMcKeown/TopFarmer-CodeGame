@@ -13,6 +13,9 @@ class TileGraphics:
         
     def load_graphics(self):
         """loads images from assets folder for crop images and farmer spritesheet for animation"""
+
+        self.tree_img = pygame.image.load('assets/tree.png').convert_alpha()
+        self.tree_img = pygame.transform.scale(self.tree_img, (self.scale_factor, self.scale_factor))
         # Load the farmer sprite sheet (ensure it's 48x48 per frame)
         self.farmer_sprite_sheet = pygame.image.load('assets/farmer_idle.png').convert_alpha()
         self.farmer_sprites = []
@@ -58,3 +61,8 @@ class TileGraphics:
         if crop_type in self.crop_images:
             crop_image = self.crop_images[crop_type]
             surface.blit(crop_image, (x * self.scale_factor, y * self.scale_factor))
+
+    def render_tree(self, surface, x, y):
+        """draws tree image on specified tile"""
+        tree_image = self.tree_img
+        surface.blit(tree_image, (x * self.scale_factor, y * self.scale_factor))
