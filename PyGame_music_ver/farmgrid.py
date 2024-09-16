@@ -30,6 +30,8 @@ class FarmGrid:
             self.generate_tree_dirt()
         elif self.config == 'tree_grass':
             self.generate_tree_grass()
+        elif self.config == 'crop_row':
+            self.generate_crop_row()
         else:
             raise ValueError("Unknown farm configuration")
 
@@ -126,8 +128,19 @@ class FarmGrid:
                 x, y = avail_positions.pop()  # pop from list and get random available position
                 if self.grid[x][y].tile_type == 0 and self.grid[x][y].tile_type != 3:
                     self.grid[x][y] = CropTile(x, y, random.randrange(100) % 3) 
+    def generate_crop_row(self):
+        """Generates a farm with a single row of randomly placed crops. The row position and crop types are random."""
+        self.grid = [[FarmTile(x, y, 0) for y in range(self.height)] for x in range(self.width)]  # Initialize grid with dirt
 
-    
+        # Randomly select a row position for the crops
+        crop_row = random.randrange(1,self.height-1)
+
+        # Randomly assign crop types to tiles in the selected row
+        for x in range(self.width):
+            crop_type = random.randrange(3)  # Randomly choose a crop type (0 = potato, 1 = carrot, 2 = pumpkin)
+            self.grid[x][crop_row] = CropTile(x, crop_row, crop_type)  
+
+        
     def restart(self):
         print("RESTART(farmgrid)")
         #self.farmer.x, self.farmer.y = 0, 0
@@ -168,7 +181,7 @@ class FarmGrid:
 
     def walkable(self, pos):
         x, y = pos
-        return not self.out_of_bounds((x, y)) and self.grid[x][y].tile_type < 2
+        return not self.out_of_bounds((x, y)) and (self.grid[x][y].tile_type < 2 or self.grid[x][y].tile_type==3)
 
     def add_farmer(self, x=0, y=0):
         if self.farmer is None:

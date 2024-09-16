@@ -122,18 +122,19 @@ class HomePage(tk.Frame):
             the instance of embed_pygame that contains
             the farm data. I will forget how this works.'''
             self.controller.show_frame(GamePage) # switch to game page
-            self.controller.frames[GamePage].display_level_task()
+            self.controller.frames[GamePage].start_level(1)
         else:
             pass
 
     def handle_continue(self):
         print("continue")
+        self.controller.frames[GamePage].handle_restart()
         self.controller.show_frame(GamePage)
+        #self.controller.frames[GamePage].display_level_task()
 
     def handle_levels(self):
         print("levels")
         self.controller.show_frame(LevelsPage)
-        # TODO: show list of levels
     
     def handle_statistics(self):
         print("statistics")
@@ -250,7 +251,11 @@ class GamePage(tk.Frame):
             potatoes = self.embed_pygame_o.farm.farmer.inventory.count(0)
             carrots = self.embed_pygame_o.farm.farmer.inventory.count(1)                
             pumpkins = self.embed_pygame_o.farm.farmer.inventory.count(2)
-            self.lbl_inventory.config(text="  INVENTORY:  Potatoes: {},  Carrots: {},  Pumpkins: {}  ".format(potatoes, carrots, pumpkins))
+            def update_label():
+                self.lbl_inventory.config(
+                    text="  INVENTORY:  Potatoes: {},  Carrots: {},  Pumpkins: {}  ".format(potatoes, carrots, pumpkins))
+
+            self.lbl_inventory.after(0, update_label) # scheduling
 
     def handle_run(self):
         print("run")

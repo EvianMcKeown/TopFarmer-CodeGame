@@ -1,0 +1,35 @@
+#possible level solutions. For demo purposes
+#LVL1
+for i in range(5):
+	farmer.move("right")
+	farmer.plant("potato","left")
+#LVL2
+for i in range(4):
+	farmer.plant("carrot","down")
+	farmer.move("right")
+	farmer.plant("pumpkin","down")
+	farmer.move("right")
+
+#LVL3
+#user can hardcode movements or use lvl 4 solution
+
+#LVL4
+
+
+#LVL5
+while farm.grid[farmer.x][farmer.y+1].tile_type==0:
+	farmer.move("down")
+for i in range(10):
+	if farm.grid[farmer.x][farmer.y+1].crop_type == 2:
+		farmer.harvest("down")
+		farmer.plant("carrot","down")
+		farmer.move("right")
+	else:
+		farmer.move("right")
+
+#LVL6
+
+#LVL7
+
+#LVL8
+

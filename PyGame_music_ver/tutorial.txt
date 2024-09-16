@@ -25,6 +25,7 @@ Accessing the grid:
     x can be {0...number_of_columns - 1} (from top to bottom)
     y can be {0...number_of_rows - 1} (from left to right)
 
+    Accessing tile_type
     Useful property of tile: tile_type (can be 0, 1, 2, 3 or 4)
     0: dirt
     1: grass
@@ -34,4 +35,14 @@ Accessing the grid:
 
     Example: do something if tile downwards from farmer is a crop
         if farm.grid[farmer.x][farmer.y + 1].tile_type == 3:
+            # DO SOMETHING
+
+    Accessing crop_type
+    Useful property of tile: crop_type (can be 0, 1, 2)
+    0: potato
+    1: carrot
+    2: pumpkin
+
+    Example: do something if tile downwards from farmer is a carrot
+        if farm.grid[farmer.x][farmer.y + 1].crop_type == 1:
             # DO SOMETHING

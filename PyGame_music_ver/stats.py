@@ -94,6 +94,26 @@ class FarmStats:
         return self.potatoes_harvested + self.carrots_harvested + self.pumpkins_harvested
     
 ## stats and check functions specifically for the level checks found in Level class ##
+    def count_crops(self, crop_type):
+        """Count the total number of specific crop type on the farm."""
+        count = 0
+        for x in range(self.farm.width):
+            for y in range(self.farm.height):
+                tile = self.farm.grid[x][y]
+                if tile.tile_type == 3 and tile.crop_type == crop_type:  # Check tiles with specific crop
+                    count += 1
+        return count
+    def count_total_crops(self):
+        """Count the total number of specific crop type on the farm."""
+        count = 0
+        for x in range(self.farm.width):
+            for y in range(self.farm.height):
+                tile = self.farm.grid[x][y]
+                if tile.tile_type == 3:  # Check tiles with specific crop
+                    count += 1
+        return count
+    
+    # level specific checks
     def check_potatoes_in_row(self, count):
         #  check if there are 'count' potatoes in a row/col
         ver = False
@@ -121,5 +141,31 @@ class FarmStats:
                     consecutive = 0
 
         return ver or hor
+    
+    def check_alternating_pattern(self, count):
+        """Check for alternating carrots and pumpkins in a row or column."""
+        for y in range(self.farm.height):
+            consecutive = 0
+            for x in range(self.farm.width):
+                tile = self.farm.grid[x][y]
+                if tile.tile_type == 3:  
+                    if (consecutive % 2 == 0 and tile.crop_type == 1) or (consecutive % 2 == 1 and tile.crop_type == 2):  # Carrot then Pumpkin
+                        consecutive += 1
+                    else:
+                        consecutive = 0
+                if consecutive == count:
+                    return True
+        
+        return False
+    def check_no_dirt_tiles(self):
+        # Iterate through all tiles in the grid
+        for x in range(self.farm.width):
+            for y in range(self.farm.height):
+                tile = self.farm.grid[x][y]
+                if tile.tile_type == 0: 
+                    return False  # Found a dirt tile, return False
+
+        return True
+
 
     

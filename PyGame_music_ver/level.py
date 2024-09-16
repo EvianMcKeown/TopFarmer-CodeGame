@@ -21,24 +21,24 @@ class Levels:
                 'requires_multiple_test_cases': False,
                 'unlocked': False
             },
-            3: { # does not matter orientation; crop count == 10 for each crop type
-                'task': 'Plant 10 of each crop type (your entire inventory)',
+            3: { 
+                'task': 'plant pumpkins along the river (all dirt tiles adjacent to river).',
                 'check_completion': self.check_level_3_completion,
-                'config': 'grass', #random patches of grass
-                'requires_multiple_test_cases': True, # true if level requires multiple test cases to pass
-                'unlocked': True
+                'config': 'river', 
+                'requires_multiple_test_cases': False, # true if level requires multiple test cases to pass
+                'unlocked': False
             },
             4: {
-                'task': 'Harvest all pumpkins on the farm', 
+                'task': 'Once again you must plant pumpkins along the river (all dirt tiles adjacent to river). But this time your code must now pass all 3 randomised farm cases.', 
                 'check_completion': self.check_level_4_completion,
-                'config': 'crops', # config type with randomly generated crops on dirt farm
+                'config': 'tree_river', 
                 'requires_multiple_test_cases': True,
                 'unlocked': True
             },
             5: {
                 'task': 'Replace every pumpkin with a carrot', 
                 'check_completion': self.check_level_5_completion,
-                'config': 'crops',
+                'config': 'crop_row',
                 'requires_multiple_test_cases': True,
                 'unlocked': True
             },
@@ -125,9 +125,9 @@ class Levels:
 
 
     def check_current_level_completion(self, farm_stats): 
-            #generic func that passes level specific check function
-            check_function = self.levels[self.current_level]['check_completion']
-            return check_function(farm_stats)
+        #generic func that passes level specific check function
+        check_function = self.levels[self.current_level]['check_completion']
+        return check_function(farm_stats)
     
 ##Level-specific check functions.## 
     def check_level_1_completion(self, farm_stats):
@@ -135,24 +135,32 @@ class Levels:
         return farm_stats.check_potatoes_in_row(5)
 
     def check_level_2_completion(self, farm_stats):
-        pass
+        # check for 4 carrots and 4 pumpkins in an alternating pattern.
+        return farm_stats.check_alternating_pattern(4)
     
     def check_level_3_completion(self, farm_stats):
-        pass
+        return farm_stats.check_no_dirt_tiles()
+
     
     def check_level_4_completion(self, farm_stats):
-        pass
+        return farm_stats.check_no_dirt_tiles()
 
     def check_level_5_completion(self, farm_stats):
-        pass
+        if farm_stats.count_crops('pumpkin') == 0 and farm_stats.count_total_crops() == 10:
+            return True
+        
 
     def check_level_6_completion(self, farm_stats):
+        #longest_stretch = farm_stats.find_longest_dirt_stretch()
+        #return farm_stats.count_crops_in_stretch('carrot', longest_stretch) == len(longest_stretch)
         pass
-
     def check_level_7_completion(self, farm_stats):
+        #river_adjacent_tiles = farm_stats.get_river_adjacent_tiles()
+        #return all(farm_stats.get_crop_at(tile) == 'pumpkin' for tile in river_adjacent_tiles)
         pass
     def check_level_8_completion(self, farm_stats):
+        #tree_adjacent_tiles = farm_stats.get_tree_adjacent_tiles()
+        #return all(farm_stats.is_tile_filled(tile) for tile in tree_adjacent_tiles)
         pass
-
 
         
