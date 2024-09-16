@@ -9,9 +9,10 @@ class FarmTile:
 
     def __str__(self):
         return str(self.tile_desc[self.tile_type])
-    
+
     def get_pos(self):
         return (self.x, self.y)
+
 
 class CropTile(FarmTile):
     def __init__(self, x, y, crop_type=0):
