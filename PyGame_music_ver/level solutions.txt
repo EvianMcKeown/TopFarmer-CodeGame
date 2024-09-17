@@ -71,7 +71,7 @@ for i in range(10):
 		if count > maxCount:
 			maxCount = count
 			x = i
-			y = j++++
+			y = j
 for i in range(x):
 	farmer.move("right")
 for i in range(y-1):
