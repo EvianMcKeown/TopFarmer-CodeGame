@@ -14,7 +14,7 @@ class Levels:
                 'requires_multiple_test_cases': False, #  false if code is to be run on only one farm instance
                 'unlocked': True
             },
-            2: { # a pattern.. must be in row or column
+            2: { # a pattern.. must be in row
                 'task': 'Plant 4 carrots and 4 pumpkins in an alternating pattern. eg: carrot, pumpkin, carrot, pumpkin, etc',
                 'check_completion': self.check_level_2_completion,
                 'config': 'plain', # dirt only
@@ -24,42 +24,42 @@ class Levels:
             3: { 
                 'task': 'plant pumpkins along the river (all dirt tiles adjacent to river).',
                 'check_completion': self.check_level_3_completion,
-                'config': 'river', 
+                'config': 'river_horizontal', 
                 'requires_multiple_test_cases': False, # true if level requires multiple test cases to pass
                 'unlocked': False
             },
             4: {
                 'task': 'Once again you must plant pumpkins along the river (all dirt tiles adjacent to river). But this time your code must now pass all 3 randomised farm cases.', 
                 'check_completion': self.check_level_4_completion,
-                'config': 'tree_river', 
+                'config': 'river_horizontal', 
                 'requires_multiple_test_cases': True,
-                'unlocked': True
+                'unlocked': False
             },
             5: {
                 'task': 'Replace every pumpkin with a carrot', 
                 'check_completion': self.check_level_5_completion,
                 'config': 'crop_row',
                 'requires_multiple_test_cases': True,
-                'unlocked': True
+                'unlocked': False
             },
             6: {
-                'task': 'find the longest consecutive row or column of dirt and fill it with carrots.',
+                'task': 'plant crops around trees(on every tile adjacent to a tree).',
                 'check_completion': self.check_level_6_completion,
-                'config': 'grass',
+                'config': 'tree_dirt', # dirt farm with 3 randomly placed trees
                 'requires_multiple_test_cases': True,
-                'unlocked': True
+                'unlocked': False
             },
             7: {
-                'task': 'plant pumpkins along river (in every spot adjacent to a river).',
+                'task': 'find the longest consecutive row of dirt and fill it with carrots.',
                 'check_completion': self.check_level_7_completion,
-                'config': 'tree_river', # river with tree
-                'requires_multiple_test_cases': True,
-                'unlocked': True
+                'config': 'grass',
+                'requires_multiple_test_cases': False,
+                'unlocked': False
             },
             8: {
-                'task': 'plant crops around trees(on every tile adjacent to a tree).',
+                'task': 'find the longest consecutive row of dirt and fill it with carrots (no hardcoding; several random test cases apply).\n WARNING: you may want to turn slow mode off in settings as the code you write for this level may take a while to run.',
                 'check_completion': self.check_level_8_completion,
-                'config': 'tree_dirt', # dirt farm with 3 randomly placed trees
+                'config': 'grass',
                 'requires_multiple_test_cases': True,
                 'unlocked': False
             },
@@ -119,48 +119,47 @@ class Levels:
 
     def advance_to_next_level(self):
          # advances to next level and unlocks it in levelPage
-        self.unlock_next_level()
-        self.current_level += 1
-        self.save_progress()
+        if self.current_level != 8:
+            self.unlock_next_level()
+            self.current_level += 1
+            self.save_progress()
 
 
     def check_current_level_completion(self, farm_stats): 
-        #generic func that passes level specific check function
+        """generic func that passes level specific check function"""
         check_function = self.levels[self.current_level]['check_completion']
         return check_function(farm_stats)
     
-##Level-specific check functions.## 
+###Level-specific check functions. farm_stats is accessed in order to check farm grid state and allow reuse of functions### 
     def check_level_1_completion(self, farm_stats):
         # Check if 5 potatoes are planted in a row/col
-        return farm_stats.check_potatoes_in_row(5)
+        return farm_stats.check_crops_in_row(5,0)
 
     def check_level_2_completion(self, farm_stats):
         # check for 4 carrots and 4 pumpkins in an alternating pattern.
         return farm_stats.check_alternating_pattern(4)
     
     def check_level_3_completion(self, farm_stats):
-        return farm_stats.check_no_dirt_tiles()
+        return farm_stats.check_crops_in_row(10,2) and farm_stats.check_crops_adjacent_to_river()
 
-    
     def check_level_4_completion(self, farm_stats):
-        return farm_stats.check_no_dirt_tiles()
-
+        return farm_stats.check_crops_in_row(10,2) and farm_stats.check_crops_adjacent_to_river()
+    
     def check_level_5_completion(self, farm_stats):
-        if farm_stats.count_crops('pumpkin') == 0 and farm_stats.count_total_crops() == 10:
+        if farm_stats.count_crops(2) == 0 and farm_stats.count_total_crops() == 10:
             return True
-        
-
+ 
     def check_level_6_completion(self, farm_stats):
-        #longest_stretch = farm_stats.find_longest_dirt_stretch()
-        #return farm_stats.count_crops_in_stretch('carrot', longest_stretch) == len(longest_stretch)
         pass
+    
     def check_level_7_completion(self, farm_stats):
-        #river_adjacent_tiles = farm_stats.get_river_adjacent_tiles()
-        #return all(farm_stats.get_crop_at(tile) == 'pumpkin' for tile in river_adjacent_tiles)
-        pass
+        longest = farm_stats.longest_dirt_row()
+        print("longest dirt row = ",longest)
+        return farm_stats.check_crops_in_row(longest,1)
+    
     def check_level_8_completion(self, farm_stats):
-        #tree_adjacent_tiles = farm_stats.get_tree_adjacent_tiles()
-        #return all(farm_stats.is_tile_filled(tile) for tile in tree_adjacent_tiles)
-        pass
+        longest = farm_stats.longest_dirt_row()
+        print("longest dirt row = ",longest)
+        return farm_stats.check_crops_in_row(longest,1)
 
         

@@ -103,6 +103,7 @@ class FarmStats:
                 if tile.tile_type == 3 and tile.crop_type == crop_type:  # Check tiles with specific crop
                     count += 1
         return count
+    
     def count_total_crops(self):
         """Count the total number of specific crop type on the farm."""
         count = 0
@@ -114,15 +115,15 @@ class FarmStats:
         return count
     
     # level specific checks
-    def check_potatoes_in_row(self, count):
-        #  check if there are 'count' potatoes in a row/col
+    def check_crops_in_row(self, count, crop):
+        """ check if there are 'count' crop in a row/col"""
         ver = False
         hor = False
         for y in range(self.farm.height):
             consecutive = 0
             for x in range(self.farm.width):
                 tile = self.farm.grid[x][y]
-                if tile.tile_type == 3 and tile.crop_type == 0:  # 0 for potato
+                if tile.tile_type == 3 and tile.crop_type == crop:  # 0=potato, 1=carrot, 2=pumpkin
                     consecutive += 1
                     if consecutive == count:
                         hor = True
@@ -133,7 +134,7 @@ class FarmStats:
             consecutive = 0
             for y in range(self.farm.width):
                 tile = self.farm.grid[x][y]
-                if tile.tile_type == 3 and tile.crop_type == 0:  # 0 for potato
+                if tile.tile_type == 3 and tile.crop_type == crop:  
                     consecutive += 1
                     if consecutive == count:
                         ver = True
@@ -141,7 +142,16 @@ class FarmStats:
                     consecutive = 0
 
         return ver or hor
-    
+    def check_crops_adjacent_to_river(self):
+        for x in range(self.farm.width):
+            for y in range(self.farm.height):
+                tile = self.farm.grid[x][y]
+                adjacent = self.farm.grid[x][y-1]
+                if tile.tile_type == 2: 
+                    if adjacent.tile_type == 3:
+                        return True
+                    
+
     def check_alternating_pattern(self, count):
         """Check for alternating carrots and pumpkins in a row or column."""
         for y in range(self.farm.height):
@@ -166,6 +176,25 @@ class FarmStats:
                     return False  # Found a dirt tile, return False
 
         return True
+    
+    def longest_dirt_row(self):
+        """Finds the longest consecutive row of dirt tiles in the farm grid."""
+        longest = 0  #keeep track of the longest sequence of dirt tiles
+
+        for y in range(10):  
+            current_dirt_count = 0  #count consecutive dirt tiles in the current row
+
+            for x in range(10):  
+                tile = self.farm.grid[x][y] 
+
+                if tile.tile_type == 0:  # If dirt
+                    current_dirt_count += 1
+                    longest = max(longest, current_dirt_count)
+                else:
+                    current_dirt_count = 0  # reset count when encountering grass or otherr tile
+
+        return longest
+
 
 
     

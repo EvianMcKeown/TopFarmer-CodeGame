@@ -20,6 +20,8 @@ class FarmGrid:
             self.generate_plain()
         elif self.config == 'river':
             self.generate_river()
+        elif self.config == 'river_horizontal':
+            self.generate_river_horizontal()
         elif self.config == 'tree_river':
             self.generate_tree_river()
         elif self.config == 'grass':
@@ -66,6 +68,21 @@ class FarmGrid:
                     else:
                         self.grid[x][y] = FarmTile(x, y, 1) # grass
 
+    def generate_river_horizontal(self):
+        """Generates a farm with a horizontal river and the entire side above the river as dirt. The rest of the farm is grass."""
+        self.grid = [[None for _ in range(self.height)] for _ in range(self.width)]
+
+        river_y = random.randrange(2, self.height - 1)  # Pick a single row for the river
+
+        for x in range(self.width):
+            for y in range(self.height):
+                if y == river_y:
+                    self.grid[x][y] = FarmTile(x, y, 2)  # water (single row for the river)
+                elif y < river_y:
+                    self.grid[x][y] = FarmTile(x, y, 0)  # dirt (entire side above the river)
+                else:
+                    self.grid[x][y] = FarmTile(x, y, 1)  # grass (below the river
+
     def generate_tree_river(self):
         """"generates a farm with river, dirt along one side, and a tree. rest of farm is grass"""
         self.grid = [[None for _ in range(self.height)] for _ in range(self.width)]
@@ -100,7 +117,9 @@ class FarmGrid:
         """
         self.grid = [[None for _ in range(self.height)] for _ in range(self.width)]
         self.grid = [[FarmTile(x, y, 0) for y in range(self.height)] for x in range(self.width)]  # Initialize grid with dirt
-
+        for x in range(self.width):
+            for y in range(1):
+                self.grid[x][y] = FarmTile(x, y, 1)  # Grass tile
         for x in range(self.width):
             for y in range(self.height):
                 if random.random() < grass_percentage:  # Randomly assign grass

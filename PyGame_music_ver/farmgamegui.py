@@ -259,24 +259,31 @@ class GamePage(tk.Frame):
 
     def handle_run(self):
         print("run")
-        code = self.txt_code.get(1.0, "end-1c") # get user code from text box
-        if code == "": # check if user has entered code
+        code = self.txt_code.get(1.0, "end-1c")  # Get user code from text box
+        if code == "":  # Check if user has entered code
             messagebox.showerror(title="ERROR!", message="There is no code to run.")
         else:
-            if self.controller.levels.get_test_cases()==False:  #handle single test cases
-                self.embed_pygame_o.execute_python_code(code)  # execute user code
+            if self.controller.levels.get_test_cases() == False:  # Handle single test case
+                self.embed_pygame_o.execute_python_code(code)  # Execute user code
 
-                if self.controller.levels.check_current_level_completion(self.embed_pygame_o.farm.stats): # check if level is completed
+                # Check if the level is completed
+                if self.controller.levels.check_current_level_completion(self.embed_pygame_o.farm.stats):
                     self.level_completed()
-                    self.controller.frames[LevelsPage].update_level_buttons() 
+                    self.controller.frames[LevelsPage].update_level_buttons()
                 else:
                     self.level_failed()
             else:  # Handle multiple test cases
-                # Retrieve the number of test cases for the current level
-                num_test_cases = 3  # You want to run 3 test cases
+                num_test_cases = 3  # Run 3 test cases
                 all_passed = True
 
                 for _ in range(num_test_cases):
+                    # Reset the farm for the current test case
+                    self.embed_pygame_o.farm = FarmGrid(self.embed_pygame_o.FARM_WIDTH, self.embed_pygame_o.FARM_HEIGHT, config=self.controller.levels.get_current_config())
+                    
+                    # Ensure farm grid and display are updated before code execution
+                    self.embed_pygame_o.update()  # Refresh farm display
+                    time.sleep(1)  # Wait for farm display to update
+
                     # Execute the user code
                     self.embed_pygame_o.execute_python_code(code)
                     
@@ -285,24 +292,29 @@ class GamePage(tk.Frame):
                         all_passed = False
                         break  # Exit loop if any test case fails
 
-                    # Restart the farm for the next test case
-                    self.embed_pygame_o.farm = FarmGrid(self.embed_pygame_o.FARM_WIDTH, self.embed_pygame_o.FARM_HEIGHT, config=self.controller.levels.get_current_config())
-                
-                # Call the appropriate method based on whether all test cases passed
+                # Check if all test cases passed
                 if all_passed:
                     self.level_completed()
                     self.controller.frames[LevelsPage].update_level_buttons()
                 else:
                     self.level_failed()
-                       
+
 
     def level_completed(self):
         self.controller.music_player.play_level_completion_sound()
         response = messagebox.askyesno("Level Complete", "Woohoo! Great job. Proceed to the next level?")
         if response:
-            self.controller.levels.advance_to_next_level()
-            self.start_level(self.controller.levels.current_level)
-            self.controller.frames[LevelsPage].update_level_buttons()
+            if self.controller.levels.current_level != 8:
+                self.controller.levels.advance_to_next_level()
+                self.start_level(self.controller.levels.current_level)
+                self.controller.frames[LevelsPage].update_level_buttons()
+            else:
+                messagebox.askyesno("CONGRATULATIONS!", "Congratulations! you've completed the game! Thanks for playing! Go back to Home?")
+                if response:
+                    self.handle_home()
+                else:
+                    pass
+
         else:
             # Stay on the current level
             pass
@@ -323,9 +335,11 @@ class GamePage(tk.Frame):
 
     def handle_restart(self):
         print("restart (farmgamegui)")
+        #self.embed_pygame_o.farm = FarmGrid(self.embed_pygame_o.FARM_WIDTH, self.embed_pygame_o.FARM_HEIGHT, config=self.controller.levels.get_current_config())
         if self.embed_pygame_o.farm:
             self.embed_pygame_o.farm.restart() # restart farm
             self.start_level(self.controller.levels.current_level)
+            self.embed_pygame_o.update()
         #self.controller.frames[GamePage].embed_pygame_o.farm = self.controller.levels.start_level(self.controller.levels.current_level) #stuf
         
     def handle_help(self):

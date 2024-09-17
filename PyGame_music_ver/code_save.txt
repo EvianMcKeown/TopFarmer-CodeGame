@@ -1,3 +1,5 @@
-for i in range(4):
-	farmer.move("right")
-	farmer.plant("potato","left")
+while farm.grid[farmer.x][farmer.y+2].tile_type==0:
+	farmer.move("down")
+for i in range(10):
+		farmer.plant("pumpkin","down")
+		farmer.move("right")

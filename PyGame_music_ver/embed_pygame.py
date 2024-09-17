@@ -3,7 +3,6 @@ from tkinter import *
 import pygame
 import time
 from farmgrid import FarmGrid
-from level import Levels
 from tilegraphics import TileGraphics
 class EmbedPygame:
 
@@ -117,9 +116,10 @@ class EmbedPygame:
                     final_code += '\t' * indentation_level + 'time.sleep(0.4)\n'
                     # Pop from stack if the next line has less indentation
                     if indentation_stack and indentation_level < indentation_stack[-1]:
-                        indentation_stack.pop()
+                        indentation_stack.pop() 
         else:
-            final_code = code  # slow mode off, execute all at once
+            final_code = code + '\ntime.sleep(1)\nupdate()\n'  # slow mode off, execute all at once
+            
         # print full code to terminal
         print(final_code)
     
