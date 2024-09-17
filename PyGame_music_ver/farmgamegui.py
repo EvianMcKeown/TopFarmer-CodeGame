@@ -11,6 +11,7 @@ from level import Levels
 from farmgrid import FarmGrid
 import time
 from musicplayer import MusicPlayer
+import sys
 
 class FarmGameGUI(tk.Tk):
 
@@ -71,7 +72,7 @@ class FarmGameGUI(tk.Tk):
         self.saveandload.save_code(self.frames[GamePage].txt_code.get(1.0, "end-1c"))
         self.frames[GamePage].embed_pygame_o.exit()
         self.destroy()
-        exit(0)
+        sys.exit(0)
 
 class HomePage(tk.Frame):
     def __init__(self, parent, controller):
