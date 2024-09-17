@@ -1,6 +1,8 @@
 # stats.py
 
 class FarmStats:
+    """class for storing farm statistics for StatisticsPage and functions that 
+    return information about farm state used in level checking"""
     def __init__(self,farm):
         self.farm = farm
 
@@ -105,18 +107,18 @@ class FarmStats:
         return count
     
     def count_total_crops(self):
-        """Count the total number of specific crop type on the farm."""
+        """Count the total number of all types of crop tiles on the farm."""
         count = 0
         for x in range(self.farm.width):
             for y in range(self.farm.height):
                 tile = self.farm.grid[x][y]
-                if tile.tile_type == 3:  # Check tiles with specific crop
+                if tile.tile_type == 3:  
                     count += 1
         return count
     
     # level specific checks
     def check_crops_in_row(self, count, crop):
-        """ check if there are 'count' crop in a row/col"""
+        """ check if there are 'count' crop in a row or col"""
         ver = False
         hor = False
         for y in range(self.farm.height):
@@ -143,6 +145,7 @@ class FarmStats:
 
         return ver or hor
     def check_crops_adjacent_to_river(self):
+        """check if there are crops planted adjacent to the river"""
         for x in range(self.farm.width):
             for y in range(self.farm.height):
                 tile = self.farm.grid[x][y]
@@ -168,6 +171,7 @@ class FarmStats:
         
         return False
     def check_no_dirt_tiles(self):
+        """checks that there are no dirt tiles in the farm grid"""
         # Iterate through all tiles in the grid
         for x in range(self.farm.width):
             for y in range(self.farm.height):

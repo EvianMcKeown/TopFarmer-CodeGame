@@ -14,7 +14,7 @@
 # restart too many times and game crashes with error:\CodeGame-Capstone-brunch\PyGame_Embedded_Tkinter_levels\embed_pygame.py", line 88, in render_farm
     farmer_x, farmer_y = self.farm.farmer.get_pos() [FIXED]
                          ^^^^^^^^^^^^^^^^^^^^^^^^
-
+# new game doesnt reset levels unlocked while already in game. have to first close game, then upon opening, it will be locked again. bcause it uses the previous json file to read in all the level data
 
 
 REFACTORINGS TO FIX DEADLOCKS N STUFF - possible reason for not updating properly

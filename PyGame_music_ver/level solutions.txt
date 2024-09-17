@@ -32,11 +32,29 @@ for i in range(10):
 		farmer.move("right")
 
 ###LVL6
+for y in range(9):
+	if y%2 ==0:
+		for x in range(9):
+			if farm.grid[x][y+1].tile_type == 3:
+				farmer.harvest("down")
+			if x<9:
+				farmer.move("right")
+		if y<9:
+			farmer.move("down")
+	else:
+		for x in range(9,-1,-1):
+			if farm.grid[x][y+1].tile_type == 3:
+				farmer.harvest("down")
+			if x>0:
+				farmer.move("left")
+		if y<9:
+			farmer.move("down")
+
 
 ###LVL7 
 hardcode or use lvl 8 solution 
 
-###LVL8 no hardcode
+###LVL8 no hardcode (set to slow mode first)
 x = 0
 y = 0
 maxCount = 0

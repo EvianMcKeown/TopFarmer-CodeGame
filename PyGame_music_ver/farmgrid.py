@@ -126,38 +126,30 @@ class FarmGrid:
                     self.grid[x][y] = FarmTile(x, y, 1)  # Grass tile
     
     def generate_crops(self):
-        """Generates a plain dirt farm with randomly placed crops."""
+        """Generates a plain dirt farm with randomly placed crops. first row is grass."""
         self.generate_plain()
         
-        # Initialize grid with plain dirt
-        #self.grid = [[FarmTile(x, y, 0) for y in range(self.height)] for x in range(self.width)]
+        # Reset any existing crops to dirt
         for x in range(self.width):
             for y in range(self.height):
                 if self.grid[x][y].tile_type == 3:  # If the tile is a crop
                     self.grid[x][y].tile_type = 0  # Reset it to dirt
         
-        avail_positions = [(x, y) for x in range(self.width) for y in range(self.height) if ((x,y) != (0,0))]  # possible positions except farmer initial position
-        
-        crop_count = int(self.width * self.height * 0.2)  # 20% of the grid will have crops on it
+        # Make the first row grass (assuming tile_type 1 represents grass)
+        for x in range(self.width):
+            self.grid[x][0].tile_type = 1  # Set tile_type to grass for the first row
+
+        # Generate a list of available positions excluding the first row and farmer's initial position
+        avail_positions = [(x, y) for x in range(self.width) for y in range(1, self.height) if (x, y) != (0, 0)]
+
+        crop_count = int(self.width * self.height * 0.2)  # 20% of the grid will have crops
         random.shuffle(avail_positions)  # Shuffle the available positions to randomize crop placement
         
         for _ in range(crop_count):
             if avail_positions:
-                
-                x, y = avail_positions.pop()  # pop from list and get random available position
-                if self.grid[x][y].tile_type == 0 and self.grid[x][y].tile_type != 3:
-                    self.grid[x][y] = CropTile(x, y, random.randrange(100) % 3) 
-    def generate_crop_row(self):
-        """Generates a farm with a single row of randomly placed crops. The row position and crop types are random."""
-        self.grid = [[FarmTile(x, y, 0) for y in range(self.height)] for x in range(self.width)]  # Initialize grid with dirt
-
-        # Randomly select a row position for the crops
-        crop_row = random.randrange(1,self.height-1)
-
-        # Randomly assign crop types to tiles in the selected row
-        for x in range(self.width):
-            crop_type = random.randrange(3)  # Randomly choose a crop type (0 = potato, 1 = carrot, 2 = pumpkin)
-            self.grid[x][crop_row] = CropTile(x, crop_row, crop_type)  
+                x, y = avail_positions.pop()  # Get a random available position
+                if self.grid[x][y].tile_type == 0:  # Ensure the tile is dirt
+                    self.grid[x][y] = CropTile(x, y, random.randrange(100) % 3)  # Randomly select a crop (0-2)
 
         
     def restart(self):

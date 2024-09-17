@@ -43,10 +43,10 @@ class Levels:
                 'unlocked': False
             },
             6: {
-                'task': 'plant crops around trees(on every tile adjacent to a tree).',
+                'task': 'harvest every crop on the farm.',
                 'check_completion': self.check_level_6_completion,
-                'config': 'tree_dirt', # dirt farm with 3 randomly placed trees
-                'requires_multiple_test_cases': True,
+                'config': 'crops', 
+                'requires_multiple_test_cases': False,
                 'unlocked': False
             },
             7: {
@@ -150,7 +150,7 @@ class Levels:
             return True
  
     def check_level_6_completion(self, farm_stats):
-        pass
+        return farm_stats.count_total_crops() == 0
     
     def check_level_7_completion(self, farm_stats):
         longest = farm_stats.longest_dirt_row()
