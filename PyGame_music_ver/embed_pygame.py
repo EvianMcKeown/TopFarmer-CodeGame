@@ -51,9 +51,6 @@ class EmbedPygame:
 
         Args:
             config: A string that specifies the configuration of the farm (default is "plain").
-
-        Returns:
-            None
         """
 
         # Initialize farm with farmer
@@ -77,12 +74,6 @@ class EmbedPygame:
         """
         Exits the Pygame environment and closes the application.
         This function ensures that all Pygame resources are properly released, allowing for a clean shutdown of the game.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         pygame.quit()
@@ -96,9 +87,6 @@ class EmbedPygame:
             width: The total width of the grid.
             height: The total height of the grid.
             cell_size: The size of each individual cell in the grid.
-
-        Returns:
-            None
         """
 
         for x in range(0, width, cell_size):
@@ -110,12 +98,6 @@ class EmbedPygame:
         """
         Renders the farm grid on the Pygame surface, displaying various tile types and the farmer.
         This function iterates through the farm's grid, drawing each tile according to its type, and updates the display with the current state of the farm, including crops and the farmer's position.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         dt = self.clock.tick(60)  # delta time for animation
@@ -167,9 +149,6 @@ class EmbedPygame:
 
         Args:
             code: A string containing the Python code to be executed.
-
-        Returns:
-            None
 
         Raises:
             Exception: If there is an error during the execution of the provided code.
@@ -233,12 +212,6 @@ class EmbedPygame:
         """
         Updates the Pygame display by rendering the current state of the farm and the grid.
         This function calls the rendering methods to draw the farm and grid, refreshes the display to show the updated visuals, and processes any pending events to ensure smooth interaction.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         self.render_farm()

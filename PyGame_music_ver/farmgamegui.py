@@ -15,6 +15,9 @@ import sys
 
 
 class FarmGameGUI(tk.Tk):
+    """Represents the graphical user interface for the Farm Game application, inheriting from the Tk class.
+    This class initializes the main window, sets up various frames for different game pages, and manages the music player, providing a cohesive interface for user interaction.
+    """
 
     # __init__ function for class FarmGame
     def __init__(self, *args, **kwargs):
@@ -25,9 +28,6 @@ class FarmGameGUI(tk.Tk):
         Args:
             *args: Variable length argument list.
             **kwargs: Arbitrary keyword arguments.
-
-        Returns:
-            None
         """
 
         # __init__ function for class Tk
@@ -82,9 +82,6 @@ class FarmGameGUI(tk.Tk):
 
         Args:
             cont: The frame class to be displayed.
-
-        Returns:
-            None
         """
 
         frame = self.frames[cont]
@@ -94,16 +91,12 @@ class FarmGameGUI(tk.Tk):
         """
         Handles the actions to be taken when the application window is closing.
         This includes stopping the background music, saving the current code, exiting the embedded Pygame instance, and closing the application.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         self.music_player.stop_background_music()
-        self.saveandload.save_code(self.frames[GamePage].txt_code.get(1.0, "end-1c"))
+        self.saveandload.save_code(
+            self.frames[GamePage].txt_code.get(1.0, "end-1c")
+        )
         self.frames[GamePage].embed_pygame_o.exit()
         self.destroy()  # destroy tkinter window
         sys.exit(0)  # exit python program
@@ -117,9 +110,6 @@ class HomePage(tk.Frame):
     Args:
         parent: The parent widget for this frame.
         controller: The main application controller for managing frame transitions.
-
-    Returns:
-        None
     """
 
     def __init__(self, parent, controller):
@@ -130,9 +120,6 @@ class HomePage(tk.Frame):
         Args:
             parent: The parent widget for this frame.
             controller: The main application controller for managing frame transitions.
-
-        Returns:
-            None
         """
 
         tk.Frame.__init__(self, parent)
@@ -209,12 +196,6 @@ class HomePage(tk.Frame):
         """
         Handles the initiation of a new game by prompting the user for confirmation.
         If the user agrees, it resets the game state, deletes any existing save files, clears the input text box, and initializes the game environment.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         print("new game")
@@ -250,12 +231,6 @@ class HomePage(tk.Frame):
         """
         Handles the continuation of the game by restarting the current game frame.
         This function resets the game state and displays the GamePage, allowing the player to resume their progress.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         print("continue")
@@ -267,12 +242,6 @@ class HomePage(tk.Frame):
         """
         Handles the navigation to the levels page of the game.
         This function updates the displayed frame to show the LevelsPage, allowing the user to select different game levels.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         print("levels")
@@ -282,12 +251,6 @@ class HomePage(tk.Frame):
         """
         Handles the navigation to the statistics page of the game.
         This function updates the displayed frame to show the StatisticsPage and refreshes the statistics displayed to the user.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         print("statistics")
@@ -299,12 +262,6 @@ class HomePage(tk.Frame):
         """
         Handles the navigation to the settings page of the game.
         This function updates the displayed frame to show the SettingsPage, allowing the user to adjust game settings.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         print("settings")
@@ -326,9 +283,6 @@ class GamePage(tk.Frame):
         Args:
             parent: The parent widget for this frame.
             controller: The main application controller for managing frame transitions.
-
-        Returns:
-            None
         """
 
         tk.Frame.__init__(self, parent)
@@ -381,7 +335,9 @@ class GamePage(tk.Frame):
         frm_buttons.pack(side="bottom", fill="x", padx=15, pady=10)
 
         # Buttons for control/navigation
-        btn_run = tk.Button(frm_buttons, text="Run", width=5, command=self.handle_run)
+        btn_run = tk.Button(
+            frm_buttons, text="Run", width=5, command=self.handle_run
+        )
         btn_clear = tk.Button(
             frm_buttons, text="Clear", width=5, command=self.handle_clear
         )
@@ -434,12 +390,6 @@ class GamePage(tk.Frame):
         """
         Runs the main loop for the embedded Pygame environment, continuously updating the game state and inventory.
         This function ensures that the game remains responsive by executing updates at regular intervals while managing thread safety.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         while self.pygame_thread_running:
@@ -455,9 +405,6 @@ class GamePage(tk.Frame):
 
         Args:
             level_number: The number of the level to start.
-
-        Returns:
-            None
         """
 
         self.controller.levels.current_level = level_number
@@ -471,27 +418,17 @@ class GamePage(tk.Frame):
         """
         Displays the current task for the active level in a message box.
         This function retrieves the task associated with the current level and presents it to the user, providing guidance on what needs to be accomplished.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         task = self.controller.levels.get_current_task()
-        messagebox.showinfo(f"Level {self.controller.levels.current_level} Task", task)
+        messagebox.showinfo(
+            f"Level {self.controller.levels.current_level} Task", task
+        )
 
     def update_inventory(self):
         """
         Updates the inventory display for the farmer in the game.
         This function checks the current state of the farm and retrieves the counts of potatoes, carrots, and pumpkins, then updates the inventory label accordingly.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         if self.embed_pygame_o.farm and self.embed_pygame_o.farm.farmer:
@@ -513,12 +450,6 @@ class GamePage(tk.Frame):
         Handles the execution of user-provided code in the game environment.
         This function retrieves the code from the input text box, checks for its validity, and executes it, managing both single and multiple test cases while updating the game state based on the execution results.
 
-        Args:
-            None
-
-        Returns:
-            None
-
         Raises:
             messagebox.showerror: If no code is entered by the user.
         """
@@ -526,12 +457,16 @@ class GamePage(tk.Frame):
         print("run")
         code = self.txt_code.get(1.0, "end-1c")  # Get user code from text box
         if code == "":  # Check if user has entered code
-            messagebox.showerror(title="ERROR!", message="There is no code to run.")
+            messagebox.showerror(
+                title="ERROR!", message="There is no code to run."
+            )
         else:
             if (
                 self.controller.levels.get_test_cases() == False
             ):  # Handle single test case
-                self.embed_pygame_o.execute_python_code(code)  # Execute user code
+                self.embed_pygame_o.execute_python_code(
+                    code
+                )  # Execute user code
 
                 # Check if the level is completed
                 if self.controller.levels.check_current_level_completion(
@@ -578,12 +513,6 @@ class GamePage(tk.Frame):
         """
         Handles the actions to be taken when a level is completed in the game.
         This function plays a completion sound, prompts the user to proceed to the next level or return to the home screen, and manages the transition based on the user's response.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         self.controller.music_player.play_level_completion_sound()
@@ -613,12 +542,6 @@ class GamePage(tk.Frame):
         """
         Handles the actions to be taken when a level fails in the game.
         This function plays a failure sound, prompts the user to retry the level or return to the levels page, and manages the transition based on the user's response.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         self.controller.music_player.play_level_fail_sound()
@@ -636,12 +559,6 @@ class GamePage(tk.Frame):
         """
         Clears the user input text box in the game interface.
         This function removes all text from the code input area, allowing the user to start fresh without any previous code.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         print("clear")
@@ -651,12 +568,6 @@ class GamePage(tk.Frame):
         """
         Handles the restart of the game by resetting the farm and updating the game state.
         This function checks if the farm exists, restarts it if so, starts the current level, and refreshes the game display.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         print("restart (farmgamegui)")
@@ -671,12 +582,6 @@ class GamePage(tk.Frame):
         """
         Displays a tutorial window containing instructions for the user.
         This function attempts to read from a tutorial file and present its contents in a new window; if the file cannot be accessed, it prints an error message.
-
-        Args:
-            None
-
-        Returns:
-            None
 
         Raises:
             IOError: If the tutorial file cannot be opened or read.
@@ -700,12 +605,6 @@ class GamePage(tk.Frame):
         """
         Handles the display of the current level's task to the user.
         This function triggers the method responsible for showing the task associated with the active level, providing guidance on the objectives to be completed.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         print("task")
@@ -721,12 +620,6 @@ class LevelsPage(tk.Frame):
     """
     Handles the navigation back to the home page of the game.
     This function updates the displayed frame to show the HomePage, allowing the user to return to the main menu of the application.
-
-    Args:
-        None
-
-    Returns:
-        None
     """
 
     def __init__(self, parent, controller):
@@ -737,9 +630,6 @@ class LevelsPage(tk.Frame):
         Args:
             parent: The parent widget for this frame.
             controller: The main application controller for managing frame transitions.
-
-        Returns:
-            None
         """
 
         tk.Frame.__init__(self, parent)
@@ -766,12 +656,6 @@ class LevelsPage(tk.Frame):
         """
         Handles the navigation back to the home page of the application.
         This function updates the displayed frame to show the HomePage, allowing users to return to the main menu and access other game features.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         print("home")
@@ -781,12 +665,6 @@ class LevelsPage(tk.Frame):
         """
         Updates the state of level selection buttons based on their unlock status.
         This function iterates through the level buttons and enables or disables them according to whether the corresponding levels are unlocked, ensuring that users can only select available levels.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         for i, btn in enumerate(self.level_buttons):
@@ -803,9 +681,6 @@ class LevelsPage(tk.Frame):
 
         Args:
             level_number: The number of the level to start.
-
-        Returns:
-            None
         """
 
         print("start level:", level_number)
@@ -821,9 +696,6 @@ class StatisticsPage(tk.Frame):
     Args:
         parent: The parent widget for this frame.
         controller: The main application controller for managing frame transitions.
-
-    Returns:
-        None
     """
 
     def __init__(self, parent, controller):
@@ -834,9 +706,6 @@ class StatisticsPage(tk.Frame):
         Args:
             parent: The parent widget for this frame.
             controller: The main application controller for managing frame transitions.
-
-        Returns:
-            None
         """
 
         tk.Frame.__init__(self, parent)
@@ -891,7 +760,9 @@ class StatisticsPage(tk.Frame):
 
         """Label: Left Moves Value"""
         self.left_moves_value = str(
-            self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves("left")
+            self.controller.frames[
+                GamePage
+            ].embed_pygame_o.farm.stats.get_moves("left")
         )
         self.lbl_left_moves_value = tk.Label(
             self.frm_stats,
@@ -914,9 +785,9 @@ class StatisticsPage(tk.Frame):
 
         """Label: Right Moves Value"""
         self.right_moves_value = str(
-            self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves(
-                "right"
-            )
+            self.controller.frames[
+                GamePage
+            ].embed_pygame_o.farm.stats.get_moves("right")
         )
         self.lbl_right_moves_value = tk.Label(
             self.frm_stats,
@@ -939,7 +810,9 @@ class StatisticsPage(tk.Frame):
 
         """Label: Up Moves Value"""
         self.up_moves_value = str(
-            self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves("up")
+            self.controller.frames[
+                GamePage
+            ].embed_pygame_o.farm.stats.get_moves("up")
         )
         self.lbl_up_moves_value = tk.Label(
             self.frm_stats,
@@ -952,7 +825,9 @@ class StatisticsPage(tk.Frame):
 
         """Label: Down Moves"""
         self.down_moves_value = str(
-            self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves("down")
+            self.controller.frames[
+                GamePage
+            ].embed_pygame_o.farm.stats.get_moves("down")
         )
         self.lbl_down_moves = tk.Label(
             self.frm_stats,
@@ -965,7 +840,9 @@ class StatisticsPage(tk.Frame):
 
         """Label: Down Moves Value"""
         self.down_moves_value = str(
-            self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves("down")
+            self.controller.frames[
+                GamePage
+            ].embed_pygame_o.farm.stats.get_moves("down")
         )
         self.lbl_down_moves_value = tk.Label(
             self.frm_stats,
@@ -1019,7 +896,9 @@ class StatisticsPage(tk.Frame):
             borderwidth=BORDERWIDTH,
             relief=RELIEF,
         )
-        self.lbl_potatoes_planted_value.grid(row=1, column=3, padx=PADX, pady=PADY)
+        self.lbl_potatoes_planted_value.grid(
+            row=1, column=3, padx=PADX, pady=PADY
+        )
 
         """Label: Carrots Planted"""
         self.lbl_carrots_planted = tk.Label(
@@ -1044,7 +923,9 @@ class StatisticsPage(tk.Frame):
             borderwidth=BORDERWIDTH,
             relief=RELIEF,
         )
-        self.lbl_carrots_planted_value.grid(row=2, column=3, padx=PADX, pady=PADY)
+        self.lbl_carrots_planted_value.grid(
+            row=2, column=3, padx=PADX, pady=PADY
+        )
 
         """Label: Pumpkins Planted"""
         self.lbl_pumpkins_planted = tk.Label(
@@ -1069,7 +950,9 @@ class StatisticsPage(tk.Frame):
             borderwidth=BORDERWIDTH,
             relief=RELIEF,
         )
-        self.lbl_pumpkins_planted_value.grid(row=3, column=3, padx=PADX, pady=PADY)
+        self.lbl_pumpkins_planted_value.grid(
+            row=3, column=3, padx=PADX, pady=PADY
+        )
 
         """Label: Harvested"""
         self.lbl_harvesting = tk.Label(
@@ -1094,7 +977,9 @@ class StatisticsPage(tk.Frame):
             borderwidth=BORDERWIDTH,
             relief=RELIEF,
         )
-        self.lbl_potatoes_harvested_value.grid(row=1, column=4, padx=PADX, pady=PADY)
+        self.lbl_potatoes_harvested_value.grid(
+            row=1, column=4, padx=PADX, pady=PADY
+        )
 
         """Label: Carrots Planted Value"""
         self.carrots_harvested_value = str(
@@ -1109,7 +994,9 @@ class StatisticsPage(tk.Frame):
             borderwidth=BORDERWIDTH,
             relief=RELIEF,
         )
-        self.lbl_carrots_harvested_value.grid(row=2, column=4, padx=PADX, pady=PADY)
+        self.lbl_carrots_harvested_value.grid(
+            row=2, column=4, padx=PADX, pady=PADY
+        )
 
         """Label: Pumpkins Planted Value"""
         self.pumpkins_harvested_value = str(
@@ -1124,7 +1011,9 @@ class StatisticsPage(tk.Frame):
             borderwidth=BORDERWIDTH,
             relief=RELIEF,
         )
-        self.lbl_pumpkins_harvested_value.grid(row=3, column=4, padx=PADX, pady=PADY)
+        self.lbl_pumpkins_harvested_value.grid(
+            row=3, column=4, padx=PADX, pady=PADY
+        )
 
         """Pack Statistics Frame"""
         self.frm_stats.pack(anchor="center", padx=20, pady=20)
@@ -1133,37 +1022,37 @@ class StatisticsPage(tk.Frame):
         """
         Refreshes the displayed statistics for player movements and crops in the game.
         This function updates the labels for left, right, up, and down moves, as well as the number of potatoes, carrots, and pumpkins planted and harvested, ensuring that the user sees the most current data.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         """Refresh Left Moves"""
         self.left_moves_value = str(
-            self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves("left")
+            self.controller.frames[
+                GamePage
+            ].embed_pygame_o.farm.stats.get_moves("left")
         )
         self.lbl_left_moves_value.config(text=self.left_moves_value)
 
         """Refresh Right Moves"""
         self.right_moves_value = str(
-            self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves(
-                "right"
-            )
+            self.controller.frames[
+                GamePage
+            ].embed_pygame_o.farm.stats.get_moves("right")
         )
         self.lbl_right_moves_value.config(text=self.right_moves_value)
 
         """Refresh Up Moves"""
         self.up_moves_value = str(
-            self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves("up")
+            self.controller.frames[
+                GamePage
+            ].embed_pygame_o.farm.stats.get_moves("up")
         )
         self.lbl_up_moves_value.config(text=self.up_moves_value)
 
         """Refesh Down Moves"""
         self.down_moves_value = str(
-            self.controller.frames[GamePage].embed_pygame_o.farm.stats.get_moves("down")
+            self.controller.frames[
+                GamePage
+            ].embed_pygame_o.farm.stats.get_moves("down")
         )
         self.lbl_down_moves_value.config(text=self.down_moves_value)
 
@@ -1197,7 +1086,9 @@ class StatisticsPage(tk.Frame):
                 GamePage
             ].embed_pygame_o.farm.stats.get_potatoes_harvested()
         )
-        self.lbl_potatoes_harvested_value.config(text=self.potatoes_harvested_value)
+        self.lbl_potatoes_harvested_value.config(
+            text=self.potatoes_harvested_value
+        )
 
         """Refresh Carrots Harvested"""
         self.carrots_harvested_value = str(
@@ -1205,7 +1096,9 @@ class StatisticsPage(tk.Frame):
                 GamePage
             ].embed_pygame_o.farm.stats.get_carrots_harvested()
         )
-        self.lbl_carrots_harvested_value.config(text=self.carrots_harvested_value)
+        self.lbl_carrots_harvested_value.config(
+            text=self.carrots_harvested_value
+        )
 
         """Refresh Pumpkins Harvested"""
         self.pumpkins_harvested_value = str(
@@ -1213,7 +1106,9 @@ class StatisticsPage(tk.Frame):
                 GamePage
             ].embed_pygame_o.farm.stats.get_pumpkins_harvested()
         )
-        self.lbl_pumpkins_harvested_value.config(text=self.pumpkins_harvested_value)
+        self.lbl_pumpkins_harvested_value.config(
+            text=self.pumpkins_harvested_value
+        )
 
     def handle_home(self):
         print("home")
@@ -1229,9 +1124,6 @@ class SettingsPage(tk.Frame):
     Args:
         parent: The parent widget for this frame.
         controller: The main application controller for managing frame transitions.
-
-    Returns:
-        None
     """
 
     def __init__(self, parent, controller):
@@ -1242,9 +1134,6 @@ class SettingsPage(tk.Frame):
         Args:
             parent: The parent widget for this frame.
             controller: The main application controller for managing frame transitions.
-
-        Returns:
-            None
         """
 
         tk.Frame.__init__(self, parent)
@@ -1296,12 +1185,6 @@ class SettingsPage(tk.Frame):
         """
         Handles the navigation back to the home page of the application.
         This function updates the displayed frame to show the HomePage, allowing users to return to the main menu and access other game features.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         print("home")
@@ -1311,12 +1194,6 @@ class SettingsPage(tk.Frame):
         """
         Toggles the background music on or off based on the user's preference.
         This function checks the mute status and either stops or plays the background music accordingly, providing feedback to the user through printed messages.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         if self.mute.get() == 1:
@@ -1330,12 +1207,6 @@ class SettingsPage(tk.Frame):
         """
         Toggles the slow mode feature in the game based on the user's selection.
         This function updates the game state to enable or disable slow mode, providing feedback to the user through printed messages.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         if self.slow_mode.get() == 1:

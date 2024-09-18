@@ -20,9 +20,6 @@ class FarmGrid:
             width: The width of the farm grid (default is 10).
             height: The height of the farm grid (default is 10).
             config: A string that specifies the configuration of the farm (default is "plain").
-
-        Returns:
-            None
         """
 
         self.width = width

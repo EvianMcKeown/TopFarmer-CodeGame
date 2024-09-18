@@ -20,9 +20,6 @@ class Farmer:
             farm: The farm object that the farmer will interact with.
             x: The initial x-coordinate of the farmer's position (default is 0).
             y: The initial y-coordinate of the farmer's position (default is 0).
-
-        Returns:
-            None
         """
 
         self.farm = farm
@@ -38,9 +35,6 @@ class Farmer:
         Returns a string representation of the Farmer object.
         This method provides a simple way to display the farmer's symbol, which is used to represent the farmer visually in the game.
 
-        Args:
-            None
-
         Returns:
             str: The symbol representing the farmer.
         """
@@ -51,9 +45,6 @@ class Farmer:
         """
         Retrieves the current position of the farmer on the farm grid.
         This function returns the x and y coordinates of the farmer, allowing other components of the game to know the farmer's location.
-
-        Args:
-            None
 
         Returns:
             tuple: A tuple containing the x and y coordinates of the farmer.
@@ -68,9 +59,6 @@ class Farmer:
 
         Args:
             crop: The type of crop to be added to the inventory.
-
-        Returns:
-            None
         """
 
         self.inventory.append(crop)
@@ -83,9 +71,6 @@ class Farmer:
         Args:
             crop: The type of crop to be removed from the inventory.
 
-        Returns:
-            None
-
         Raises:
             ValueError: If the specified crop is not found in the inventory.
         """
@@ -96,9 +81,6 @@ class Farmer:
         """
         Retrieves the current inventory of crops held by the farmer.
         This function returns a dictionary that maps each crop type to the quantity of that crop in the inventory, providing an overview of the farmer's collected resources.
-
-        Args:
-            None
 
         Returns:
             dict: A dictionary where the keys are crop names and the values are the counts of each crop in the inventory.
@@ -116,9 +98,6 @@ class Farmer:
 
         Args:
             direction: A string indicating the direction to move ('up', 'down', 'left', or 'right').
-
-        Returns:
-            None
         """
 
         dest = {
@@ -140,9 +119,6 @@ class Farmer:
         Args:
             crop: The type of crop to be planted (e.g., 'potato', 'carrot', 'pumpkin').
             direction: A string indicating the direction to plant the crop ('up', 'down', 'left', or 'right').
-
-        Returns:
-            None
 
         Raises:
             ValueError: If the specified crop is not found in the inventory or if the destination tile is not a dirt tile.
@@ -173,9 +149,6 @@ class Farmer:
 
         Args:
             direction: A string indicating the direction to harvest the crop ('up', 'down', 'left', or 'right').
-
-        Returns:
-            None
 
         Raises:
             ValueError: If the destination tile does not contain a crop or is out of bounds.

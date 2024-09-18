@@ -9,24 +9,12 @@ class Levels:
     """
     Levels manages the game's levels, including their tasks, unlock status, and progress tracking.
     This class initializes the levels with specific tasks and configurations, provides methods to save and load progress, and checks for level completion based on player actions.
-
-    Args:
-        None
-
-    Returns:
-        None
     """
 
     def __init__(self):
         """
         Initializes the Levels class, setting up the levels dictionary with tasks, completion checks, and unlock statuses.
         This constructor establishes the current level and loads any previously saved progress, allowing the game to track player advancement through various challenges.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         # initialises levels dictionary with data and sets current level to lvl 1
@@ -98,12 +86,6 @@ class Levels:
         dictionary representing the progress and writes it to
         'level_progress.json', allowing the game to restore the player's state
         in future sessions.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         # Save the current level and unlocked levels to a JSON file
@@ -122,12 +104,6 @@ class Levels:
         This function attempts to read from 'level_progress.json' and updates
         the game state accordingly; if the file does not exist, it initializes
         the game to default settings.
-
-        Args:
-            None
-
-        Returns:
-            None
 
         Raises:
             FileNotFoundError: If the level progress file does not exist.
@@ -155,9 +131,6 @@ class Levels:
         with the active level, providing players with the information needed to
         complete their objectives.
 
-        Args:
-            None
-
         Returns:
             str: The task description for the current level.
         """
@@ -170,9 +143,6 @@ class Levels:
         Retrieves the farm configuration for the current level in the game.
         This function accesses the levels dictionary to return the configuration associated with the active level, which determines the layout and conditions of the farm environment.
 
-        Args:
-            None
-
         Returns:
             str: The configuration type for the current level.
         """
@@ -184,9 +154,6 @@ class Levels:
         """
         Determines whether the current level requires multiple test cases to complete.
         This function checks the levels dictionary to return a boolean indicating if the active level has been configured to necessitate multiple test cases for successful completion.
-
-        Args:
-            None
 
         Returns:
             bool: True if the current level requires multiple test cases, otherwise False.
@@ -213,9 +180,6 @@ class Levels:
         Unlocks the next level in the game, allowing the player to access it.
         This function checks if the next level exists in the levels dictionary and sets its unlock status to True, enabling the player to progress further in the game.
 
-        Args:
-            None
-
         Returns:
             None
         """
@@ -228,12 +192,6 @@ class Levels:
         """
         Advances the player to the next level and unlocks it for access.
         This function checks if the current level is not the last level, unlocks the next level, increments the current level, and saves the progress to ensure that the player's state is maintained.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         if self.current_level != 8:
