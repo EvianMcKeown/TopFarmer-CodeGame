@@ -1,5 +1,0 @@
-for i in range(4):
-	farmer.plant("carrot","down")
-	farmer.move("right")
-	farmer.plant("pumpkin","down")
-	farmer.move("right")
