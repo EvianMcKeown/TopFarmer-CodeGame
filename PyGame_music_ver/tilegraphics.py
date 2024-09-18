@@ -13,9 +13,10 @@ class TileGraphics:
         
     def load_graphics(self):
         """loads images from assets folder for crop images and farmer spritesheet for animation"""
-
-        self.tree_img = pygame.image.load('assets/tree.png').convert_alpha()
+        #load tree img
+        self.tree_img = pygame.image.load('assets/tree1.png').convert_alpha()
         self.tree_img = pygame.transform.scale(self.tree_img, (self.scale_factor, self.scale_factor))
+
         # Load the farmer sprite sheet (ensure it's 48x48 per frame)
         self.farmer_sprite_sheet = pygame.image.load('assets/farmer_idle.png').convert_alpha()
         self.farmer_sprites = []
@@ -27,9 +28,9 @@ class TileGraphics:
             self.farmer_sprites.append(scaled_frame)
         # Load crop images (32x32) 
         self.crop_images = {
-            0: pygame.image.load('assets/potato.png').convert_alpha(),
-            1: pygame.image.load('assets/carrot.png').convert_alpha(),
-            2: pygame.image.load('assets/pumpkin.png').convert_alpha()
+            0: pygame.image.load('assets/potato1.png').convert_alpha(),
+            1: pygame.image.load('assets/carrot1.png').convert_alpha(),
+            2: pygame.image.load('assets/pumpkin1.png').convert_alpha()
         }
 
         # scale crop images to match the grid tile size

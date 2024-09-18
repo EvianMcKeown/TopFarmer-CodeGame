@@ -81,7 +81,13 @@ class FarmGrid:
                 elif y < river_y:
                     self.grid[x][y] = FarmTile(x, y, 0)  # dirt (entire side above the river)
                 else:
-                    self.grid[x][y] = FarmTile(x, y, 1)  # grass (below the river
+                    self.grid[x][y] = FarmTile(x, y, 1)  # grass (below the river)
+
+        num_trees = random.randint(4, 10)  #random number of trees
+        for _ in range(num_trees):
+            tree_x = random.randint(0, self.width - 1)
+            tree_y = random.randint(river_y + 1, self.height - 1)  # place trees below the river
+            self.grid[tree_x][tree_y] = FarmTile(tree_x, tree_y, 4)  
 
     def generate_tree_river(self):
         """"generates a farm with river, dirt along one side, and a tree. rest of farm is grass"""
