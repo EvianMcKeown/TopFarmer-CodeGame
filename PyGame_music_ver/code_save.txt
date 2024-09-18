@@ -1,0 +1,9 @@
+while farm.grid[farmer.x][farmer.y+1].tile_type==0:
+	farmer.move("down")
+for i in range(10):
+	if farm.grid[farmer.x][farmer.y+1].crop_type == 2:
+		farmer.harvest("down")
+		farmer.plant("carrot","down")
+		farmer.move("right")
+	else:
+		farmer.move("right")

@@ -133,6 +133,14 @@ class FarmGrid:
                         x, y, 1
                     )  # grass (below the river)
 
+        num_trees = random.randint(4, 10)  # random number of trees
+        for _ in range(num_trees):
+            tree_x = random.randint(0, self.width - 1)
+            tree_y = random.randint(
+                river_y + 1, self.height - 1
+            )  # place trees below the river
+            self.grid[tree_x][tree_y] = FarmTile(tree_x, tree_y, 4)
+
     def generate_tree_river(self):
         """
         Generates a farm layout that includes a river, dirt tiles along one side, and a randomly placed tree, with the remainder of the farm being grass.
