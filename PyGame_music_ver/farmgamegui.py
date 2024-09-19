@@ -383,6 +383,7 @@ class GamePage(tk.Frame):
 
         # Start pygame loop in separate thread
         self.thread = threading.Thread(target=self.pygame_loop)
+        self.thread.daemon = True
         self.thread.start()
 
     # a cheap/lazy way of preventing deadlock
@@ -419,7 +420,9 @@ class GamePage(tk.Frame):
             print("SLOWMODE OFF")
 
         self.current_farm_config = self.controller.levels.get_current_config()
-        self.embed_pygame_o.farm = FarmGrid(config=self.current_farm_config)  # Reinitialize farm with new config
+        self.embed_pygame_o.farm = FarmGrid(
+            config=self.current_farm_config
+        )  # Reinitialize farm with new config
         self.display_level_task()
 
     def display_level_task(self):
@@ -497,7 +500,7 @@ class GamePage(tk.Frame):
                     )
 
                     # Ensure farm grid and display are updated before code execution
-                    self.embed_pygame_o.update()  
+                    self.embed_pygame_o.update()
                     time.sleep(1)  # Wait for farm display to update
 
                     # Execute the user code
@@ -624,7 +627,6 @@ class GamePage(tk.Frame):
     def handle_home(self):
         print("home")
         self.controller.show_frame(HomePage)  # switch to home page
-
 
 
 class LevelsPage(tk.Frame):
@@ -1124,7 +1126,6 @@ class StatisticsPage(tk.Frame):
     def handle_home(self):
         print("home")
         self.controller.show_frame(HomePage)
-
 
 
 class SettingsPage(tk.Frame):
