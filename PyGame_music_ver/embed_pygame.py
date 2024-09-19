@@ -1,4 +1,5 @@
 # embed_pygame.py
+import ast
 from tkinter import *
 import pygame
 import time
@@ -143,6 +144,7 @@ class EmbedPygame:
                 self.render_grid(
                     self.SCREEN_WIDTH, self.SCREEN_HEIGHT, self.SCALE_FACTOR
                 )
+
     def check_infinite_loop(self):
         """
         Checks if iteration count exceeds maximum allowed iterations and raises an exception if
@@ -151,8 +153,93 @@ class EmbedPygame:
         """
         self.iteration_count += 1
         if self.iteration_count > self.MAX_ITERATIONS:
-            raise Exception('Loop exceeded maximum iterations! Check your code for a possible infinite loop.')
-        
+            raise Exception(
+                "Loop exceeded maximum iterations! Check your code for a possible infinite loop."
+            )
+
+    def direction_helper(self, code):
+        """
+        Analyses the provided code to check for direction arguments in farmer.move, farmer.plant or farmer.harvest calls.
+
+        Args:
+            code: String of Python code to analyse.
+
+        Returns:
+            list: A list of tuples containing the function name and line number where the direction argument is missing (or misspelled).
+        """
+        valid_directions = {
+            '"up"',
+            '"down"',
+            '"left"',
+            '"right"',
+            "'up'",
+            "'down'",
+            "'left'",
+            "'right'",
+        }
+        missing_directions = []
+        lines = code.splitlines()
+
+        for line_number, line in enumerate(lines, start=1):
+            line = line.strip()
+            if (
+                "farmer.move" in line
+                or "farmer.plant" in line
+                or "farmer.harvest" in line
+            ):
+                func_call = ""
+                # case 1: move
+                if "farmer.move" in line:
+                    func_call = "move"
+                # case 2: plant
+                if "farmer.plant" in line:
+                    func_call = "plant"
+                # case 3: harvest
+                if "farmer.harvest" in line:
+                    func_call = "harvest"
+
+                # Check the function call has a direction argument
+                if "(" in line and ")" in line:
+                    # Extract the part inside parentheses
+                    start_index = line.index("(") + 1
+                    end_index = line.index(")")
+                    args = line[start_index:end_index].split(",")
+
+                    # Check if the first argument is a direction (string) and is not empty
+                    if not any(
+                        arg.strip().startswith("'")
+                        and arg.strip().endswith("'")
+                        for arg in args
+                    ) and (
+                        not any(
+                            arg.strip().startswith('"')
+                            and arg.strip().endswith('"')
+                            for arg in args
+                        )
+                    ):
+                        function_name = line.split("(")[0].strip()
+                        missing_directions.append((function_name, line_number))
+                    elif func_call in {"move", "harvest"}:
+                        # Check that there is only one arg
+                        if len(args) == 1 and (
+                            args[0].strip() not in valid_directions
+                        ):
+                            function_name = line.split("(")[0].strip()
+                            missing_directions.append(
+                                (function_name, line_number)
+                            )
+                    elif func_call == "plant":
+                        if (
+                            len(args) == 2
+                            and args[1].strip() not in valid_directions
+                        ):
+                            function_name = line.split("(")[0].strip()
+                            missing_directions.append(
+                                (function_name, line_number)
+                            )
+
+        return missing_directions
+
     def execute_python_code(self, code):
         """
         Injects user-provided Python code into the program and executes it, either line by line in slow mode or all at once in normal mode.
@@ -168,8 +255,14 @@ class EmbedPygame:
         # Initialize iteration count for loop checking
         self.iteration_count = 0
 
+        for i, missing_direction in enumerate(self.direction_helper(code)):
+            print(
+                f"function {self.direction_helper(code)[i][0]} on line {self.direction_helper(code)[i][1]} has a missing or incorrect direction."
+            )
+
         # Inject check for infinite loops
         code = code.replace("farmer.", "farm.farmer.")
+
         code_lines = code.split("\n")
         final_code = ""
         indentation_stack = []
@@ -179,13 +272,20 @@ class EmbedPygame:
                 stripped_line = line.strip()
                 indentation_level = len(line) - len(stripped_line)
                 # Detect loops: `for` and `while` statements
-                if stripped_line.startswith("for") or stripped_line.startswith("while"):
+                if stripped_line.startswith("for") or stripped_line.startswith(
+                    "while"
+                ):
                     # Inject loop check to prevent infinite loops
                     final_code += line + "\n"
-                    final_code += "\t" * (indentation_level + 1) + "check_infinite_loop()\n"
+                    final_code += (
+                        "\t" * (indentation_level + 1)
+                        + "check_infinite_loop()\n"
+                    )
                     indentation_stack.append(indentation_level)
-                elif stripped_line.endswith(":") or stripped_line.startswith("else"):
-                    #colon-ending statements eg: `if`, `else`, `def`, etc.
+                elif stripped_line.endswith(":") or stripped_line.startswith(
+                    "else"
+                ):
+                    # colon-ending statements eg: `if`, `else`, `def`, etc.
                     final_code += line + "\n"
                     indentation_stack.append(indentation_level)
                 else:
@@ -193,17 +293,25 @@ class EmbedPygame:
                     final_code += line + "\n"
                     final_code += "\t" * indentation_level + "update()\n"
                     final_code += "\t" * indentation_level + "time.sleep(0.4)\n"
-                    if indentation_stack and indentation_level < indentation_stack[-1]:
+                    if (
+                        indentation_stack
+                        and indentation_level < indentation_stack[-1]
+                    ):
                         indentation_stack.pop()
         else:
             # In normal mode, inject the infinite loop check in a similar way
             for line in code_lines:
                 stripped_line = line.strip()
                 indentation_level = len(line) - len(stripped_line)
-                if stripped_line.startswith("for") or stripped_line.startswith("while"):
+                if stripped_line.startswith("for") or stripped_line.startswith(
+                    "while"
+                ):
                     # Inject loop check to prevent infinite loops
                     final_code += line + "\n"
-                    final_code += "\t" * (indentation_level + 1) + "check_infinite_loop()\n"
+                    final_code += (
+                        "\t" * (indentation_level + 1)
+                        + "check_infinite_loop()\n"
+                    )
                 else:
                     final_code += line + "\n"
 
@@ -220,7 +328,7 @@ class EmbedPygame:
         )
         final_code = infinite_loop_checker + final_code
 
-        #execute final user Python code
+        # execute final user Python code
         try:
             exec(
                 final_code,
@@ -236,6 +344,7 @@ class EmbedPygame:
             )
         except Exception as e:
             print(f"Error: {e}")
+
     def update(self):
         """
         Updates the Pygame display by rendering the current state of the farm and the grid.
