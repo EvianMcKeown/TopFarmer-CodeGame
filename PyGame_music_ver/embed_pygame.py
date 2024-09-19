@@ -43,6 +43,8 @@ class EmbedPygame:
     SCREEN_WIDTH = FARM_WIDTH * SCALE_FACTOR
     SCREEN_HEIGHT = FARM_HEIGHT * SCALE_FACTOR
 
+    MAX_ITERATIONS = 1000
+
     def __init__(self, config="plain"):
         """
         Initializes the EmbedPygame class, setting up the farm grid and the Pygame environment for the game.
@@ -141,7 +143,16 @@ class EmbedPygame:
                 self.render_grid(
                     self.SCREEN_WIDTH, self.SCREEN_HEIGHT, self.SCALE_FACTOR
                 )
-
+    def check_infinite_loop(self):
+        """
+        Checks if iteration count exceeds maximum allowed iterations and raises an exception if
+        if iteration count exceeds MAX_ITERATIONS
+        This function is used to prevent possible infinite loops.
+        """
+        self.iteration_count += 1
+        if self.iteration_count > self.MAX_ITERATIONS:
+            raise Exception('Loop exceeded maximum iterations! Check your code for a possible infinite loop.')
+        
     def execute_python_code(self, code):
         """
         Injects user-provided Python code into the program and executes it, either line by line in slow mode or all at once in normal mode.
@@ -154,47 +165,62 @@ class EmbedPygame:
             Exception: If there is an error during the execution of the provided code.
         """
 
+        # Initialize iteration count for loop checking
+        self.iteration_count = 0
+
+        # Inject check for infinite loops
         code = code.replace("farmer.", "farm.farmer.")
         code_lines = code.split("\n")
         final_code = ""
         indentation_stack = []
 
         if self.slow_mode:  # slow mode on, execute line by line
-            # loop through lines of userinput code
             for line in code_lines:
                 stripped_line = line.strip()
-                # Track indentation level by counting leading tabs
-                indentation_level = len(line) - len(
-                    stripped_line
-                )  # remove trailing/leading whitespace
-                if stripped_line.endswith(":") or stripped_line.startswith(
-                    "else"
-                ):
-                    # If the line ends with a colon or is an else statement, add it directly
+                indentation_level = len(line) - len(stripped_line)
+                # Detect loops: `for` and `while` statements
+                if stripped_line.startswith("for") or stripped_line.startswith("while"):
+                    # Inject loop check to prevent infinite loops
                     final_code += line + "\n"
-                    # Push indentation level to stack
+                    final_code += "\t" * (indentation_level + 1) + "check_infinite_loop()\n"
+                    indentation_stack.append(indentation_level)
+                elif stripped_line.endswith(":") or stripped_line.startswith("else"):
+                    #colon-ending statements eg: `if`, `else`, `def`, etc.
+                    final_code += line + "\n"
                     indentation_stack.append(indentation_level)
                 else:
-                    # Add the line to final_code
+                    # Normal code lines, add update and time.sleep for slow mode
                     final_code += line + "\n"
-                    # Add update() and time.sleep() to final code with the same indentation level
                     final_code += "\t" * indentation_level + "update()\n"
                     final_code += "\t" * indentation_level + "time.sleep(0.4)\n"
-                    # Pop from stack if the next line has less indentation
-                    if (
-                        indentation_stack
-                        and indentation_level < indentation_stack[-1]
-                    ):
+                    if indentation_stack and indentation_level < indentation_stack[-1]:
                         indentation_stack.pop()
         else:
-            final_code = (
-                code + "\ntime.sleep(1)\nupdate()\n"
-            )  # slow mode off, execute all at once
+            # In normal mode, inject the infinite loop check in a similar way
+            for line in code_lines:
+                stripped_line = line.strip()
+                indentation_level = len(line) - len(stripped_line)
+                if stripped_line.startswith("for") or stripped_line.startswith("while"):
+                    # Inject loop check to prevent infinite loops
+                    final_code += line + "\n"
+                    final_code += "\t" * (indentation_level + 1) + "check_infinite_loop()\n"
+                else:
+                    final_code += line + "\n"
 
-        # print full code to terminal
-        print(final_code)
+            # Add a global check for loop iterations at the end of the code block
+            final_code += "\ncheck_infinite_loop()\ntime.sleep(1)\nupdate()\n"
 
-        # Execute final user python code
+        # Inject infinite loop check function at the start of the code
+        infinite_loop_checker = (
+            f"def check_infinite_loop():\n"
+            f"\tglobal iteration_count\n"
+            f"\titeration_count += 1\n"
+            f"\tif iteration_count > MAX_ITERATIONS:\n"
+            f"\t\traise Exception('Loop exceeded maximum iterations! Check your code for a possible infinite loop')\n"
+        )
+        final_code = infinite_loop_checker + final_code
+
+        #execute final user Python code
         try:
             exec(
                 final_code,
@@ -203,11 +229,13 @@ class EmbedPygame:
                     "farm": self.farm,
                     "update": self.update,
                     "pygame": pygame,
+                    "check_infinite_loop": self.check_infinite_loop,
+                    "iteration_count": self.iteration_count,
+                    "MAX_ITERATIONS": self.MAX_ITERATIONS,
                 },
             )
         except Exception as e:
             print(f"Error: {e}")
-
     def update(self):
         """
         Updates the Pygame display by rendering the current state of the farm and the grid.

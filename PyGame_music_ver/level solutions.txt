@@ -11,7 +11,23 @@ for i in range(4):
 	farmer.move("right")
 
 ###LVL3
-#user can hardcode movements or use lvl 4 solution
+for i in range(9):
+	farmer.move("down")
+	if farm.grid[farmer.x+1][farmer.y].tile_type==0:
+		farmer.plant("pumpkin", "right")
+		farmer.move("right")
+	else:
+		farmer.move("right")
+for i in range(9):
+	farmer.move("up")
+for i in range(9):
+	farmer.move("down")
+	if farm.grid[farmer.x-1][farmer.y].tile_type==0:
+		farmer.plant("potato", "left")
+		farmer.move("left")
+	else:
+		farmer.move("left")
+
 
 ###LVL4
 while farm.grid[farmer.x][farmer.y+2].tile_type==0:

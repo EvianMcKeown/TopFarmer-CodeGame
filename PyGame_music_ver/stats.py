@@ -264,6 +264,14 @@ class FarmStats:
                     consecutive = 0
 
         return ver or hor
+    def check_diagonal(self, x_start, y_start, x_move, y_move):
+        x, y = x_start, y_start
+        while 0<= x<10 and 0<= y<10:
+            if (self.farm.grid[x][y].tile_type == 0):
+                return False
+            x += x_move
+            y += y_move
+        return True
 
     def check_crops_adjacent_to_river(self):
         """
@@ -273,11 +281,11 @@ class FarmStats:
         Returns:
             bool: True if there are crops adjacent to the river, otherwise False.
         """
-        for x, y in itertools.product(
+        for x,y in itertools.product(
             range(self.farm.width), range(self.farm.height)
         ):
             tile = self.farm.grid[x][y]
-            adjacent = self.farm.grid[x][y - 1]
+            adjacent = self.farm.grid[x][y-1]
             if tile.tile_type == 2 and adjacent.tile_type == 3:
                 return True
 

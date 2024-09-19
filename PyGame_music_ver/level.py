@@ -20,7 +20,7 @@ class Levels:
         # initialises levels dictionary with data and sets current level to lvl 1
         self.levels = {
             1: {
-                "task": "Plant 5 potatoes in a single row or column.",  # just 5 consecvtive potatoes
+                "task": "Plant 5 potatoes in a single row or column.\n\n  HINT: try using a for loop",  # just 5 consecvtive potatoes
                 "check_completion": self.check_level_1_completion,
                 "config": "plain",
                 "requires_multiple_test_cases": False,  #  false if code is to be run on only one farm instance
@@ -34,28 +34,28 @@ class Levels:
                 "unlocked": False,
             },
             3: {
-                "task": "plant pumpkins along the river (all dirt tiles adjacent to river).",
+                "task": "Plant 2 diagonal lines of crops across the farm where possible so that it forms an X shape. You may use any crops you like.\n\nHINT: Grass is not plantable on",
                 "check_completion": self.check_level_3_completion,
-                "config": "river_horizontal",
+                "config": "grass",
                 "requires_multiple_test_cases": False,  # true if level requires multiple test cases to pass
                 "unlocked": False,
             },
             4: {
-                "task": "Once again you must plant pumpkins along the river (all dirt tiles adjacent to river). But this time your code must now pass all 3 randomised farm cases.",
+                "task": "plant pumpkins along the river (all dirt tiles adjacent to river). Your code must now pass all 3 randomised farm cases.\n\n HINT: think. How can you check the type of tile?",
                 "check_completion": self.check_level_4_completion,
                 "config": "river_horizontal",
                 "requires_multiple_test_cases": True,
                 "unlocked": False,
             },
             5: {
-                "task": "Replace every pumpkin with a carrot",
+                "task": "Replace every pumpkin with a carrot\n\n  HINT: How do you check the type of crop?",
                 "check_completion": self.check_level_5_completion,
                 "config": "crop_row",
                 "requires_multiple_test_cases": True,
                 "unlocked": False,
             },
             6: {
-                "task": "harvest every crop on the farm.",
+                "task": "harvest every crop on the farm.\n\n  HINT: consider trying to move in a zig-zag pattern to optimise the pathing of the farmer ",
                 "check_completion": self.check_level_6_completion,
                 "config": "crops",
                 "requires_multiple_test_cases": False,
@@ -69,7 +69,7 @@ class Levels:
                 "unlocked": False,
             },
             8: {
-                "task": "find the longest consecutive row of dirt and fill it with carrots (no hardcoding; several random test cases apply).HINT:\n consider defining functions in your solution \n\n WARNING: you may want to turn slow mode off in settings as the code you write for this level may take a while to run",
+                "task": "find the longest consecutive row of dirt and fill it with carrots (no hardcoding; several random test cases apply).\n\n HINT: consider defining functions in your solution perhaps to find the longest dirt row's position and length \n\n NOTE: for this level, slow mode is automatically turned off in order to execute your code without waiting for too long ",
                 "check_completion": self.check_level_8_completion,
                 "config": "grass",
                 "requires_multiple_test_cases": True,
@@ -234,10 +234,8 @@ class Levels:
         return farm_stats.check_alternating_pattern(4)
 
     def check_level_3_completion(self, farm_stats):
-        return (
-            farm_stats.check_crops_in_row(10, 2)
-            and farm_stats.check_crops_adjacent_to_river()
-        )
+        # check for 2 diagonal lines of crops across the farm
+        return farm_stats.check_diagonal(0,0,1,1) and farm_stats.check_diagonal(0,9,-1,1)
 
     def check_level_4_completion(self, farm_stats):
         return (

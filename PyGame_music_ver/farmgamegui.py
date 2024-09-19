@@ -408,10 +408,18 @@ class GamePage(tk.Frame):
         """
 
         self.controller.levels.current_level = level_number
+        if level_number == 8:
+            self.controller.frames[GamePage].embed_pygame_o.slow_mode = False
+            print("FORCED SLOWMODE OFF")
+        elif self.controller.frames[SettingsPage].slow_mode.get() == 1:
+            self.controller.frames[GamePage].embed_pygame_o.slow_mode = True
+            print("SLOWMODE ON")
+        else:
+            self.controller.frames[GamePage].embed_pygame_o.slow_mode = False
+            print("SLOWMODE OFF")
+
         self.current_farm_config = self.controller.levels.get_current_config()
-        self.embed_pygame_o.farm = FarmGrid(
-            config=self.current_farm_config
-        )  # Reinitialize farm with new config
+        self.embed_pygame_o.farm = FarmGrid(config=self.current_farm_config)  # Reinitialize farm with new config
         self.display_level_task()
 
     def display_level_task(self):
@@ -480,7 +488,7 @@ class GamePage(tk.Frame):
                 num_test_cases = 3  # Run 3 test cases
                 all_passed = True
 
-                for _ in range(num_test_cases):
+                for i in range(num_test_cases):
                     # Reset the farm for the current test case
                     self.embed_pygame_o.farm = FarmGrid(
                         self.embed_pygame_o.FARM_WIDTH,
@@ -489,7 +497,7 @@ class GamePage(tk.Frame):
                     )
 
                     # Ensure farm grid and display are updated before code execution
-                    self.embed_pygame_o.update()  # Refresh farm display
+                    self.embed_pygame_o.update()  
                     time.sleep(1)  # Wait for farm display to update
 
                     # Execute the user code
@@ -501,6 +509,8 @@ class GamePage(tk.Frame):
                     ):
                         all_passed = False
                         break  # Exit loop if any test case fails
+                    else:
+                        print(f"Test case {i+1} passed!")
 
                 # Check if all test cases passed
                 if all_passed:
@@ -516,6 +526,7 @@ class GamePage(tk.Frame):
         """
 
         self.controller.music_player.play_level_completion_sound()
+        print("LEVEL COMPLETED!")
         response = messagebox.askyesno(
             "Level Complete", "Woohoo! Great job. Proceed to the next level?"
         )
@@ -543,7 +554,7 @@ class GamePage(tk.Frame):
         Handles the actions to be taken when a level fails in the game.
         This function plays a failure sound, prompts the user to retry the level or return to the levels page, and manages the transition based on the user's response.
         """
-
+        print("LEVEL FAILED!")
         self.controller.music_player.play_level_fail_sound()
         response = messagebox.askretrycancel(
             "Level Failed", "Oops! You didn't quite complete the task. Retry?"
@@ -615,7 +626,7 @@ class GamePage(tk.Frame):
         self.controller.show_frame(HomePage)  # switch to home page
 
 
-# TODO : Add level functionality
+
 class LevelsPage(tk.Frame):
     """
     Handles the navigation back to the home page of the game.
@@ -1115,7 +1126,7 @@ class StatisticsPage(tk.Frame):
         self.controller.show_frame(HomePage)
 
 
-# DONE : Add settings functionality
+
 class SettingsPage(tk.Frame):
     """
     SettingsPage represents the interface for configuring game settings, such as enabling slow mode and muting background music.
