@@ -44,7 +44,7 @@ class EmbedPygame:
     SCREEN_WIDTH = FARM_WIDTH * SCALE_FACTOR
     SCREEN_HEIGHT = FARM_HEIGHT * SCALE_FACTOR
 
-    MAX_ITERATIONS = 1000
+    MAX_ITERATIONS = 350
 
     def __init__(self, config="plain"):
         """
