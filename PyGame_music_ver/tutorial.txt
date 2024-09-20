@@ -43,6 +43,13 @@ Accessing the grid:
     1: carrot
     2: pumpkin
 
-    Example: do something if tile downwards from farmer is a carrot
-        if farm.grid[farmer.x][farmer.y + 1].crop_type == 1:
+    Example: do something if tile to the right from farmer is a carrot
+        if farm.grid[farmer.x+1][farmer.y].crop_type == 1:
             # DO SOMETHING
+
+You are free to write your own functions and declare your own variables using the methods provided to
+ you or any built-in Python functions.
+
+If you run into issues with your code not executing, remember to check the terminal to determine the 
+type of error.
+
