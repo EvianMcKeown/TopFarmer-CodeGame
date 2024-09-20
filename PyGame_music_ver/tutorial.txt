@@ -47,9 +47,5 @@ Accessing the grid:
         if farm.grid[farmer.x+1][farmer.y].crop_type == 1:
             # DO SOMETHING
 
-You are free to write your own functions and declare your own variables using the methods provided to
- you or any built-in Python functions.
-
-If you run into issues with your code not executing, remember to check the terminal to determine the 
-type of error.
-
+You are free to write your own functions and declare your own variables using the methods provided to you
+or any built-in Python functions.
