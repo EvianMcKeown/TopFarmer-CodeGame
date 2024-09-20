@@ -1,0 +1,48 @@
+Controlling the farmer:
+    farmer.move(direction)          moves the farmer one tile in the given direction
+    farmer.plant(crop, direction)   plants a crop one tile next to the farmer in the given direction
+    farmer.harvest(direction)       harvests a crop one tile next to the farmer in the given direction
+
+    direction can be "left", "right", "up", or "down"
+    crop can be "potato", "carrot", or "pumpkin"
+
+    Example: move farmer down, plant carrot left, and harvest right
+        farmer.move("down")
+        farmer.plant("carrot", "left")
+        farmer.harvest("right")
+__________________________________________________________________________________________________________
+Accessing the farmer's properties:
+    farmer.x            the x position of the farmer on the grid
+    farmer.y            the y position of the farmer on the grid
+    farmer.inventory    the inventory of the farmer
+    
+    Example: get the number of potatoes in the farmer's inventory (0 = potato, 1 = carrot, 2 = pumpkin)
+        number_of_potatoes = farmer.inventory.count(0)
+_________________________________________________________________________________________________________
+Accessing the grid:
+    farm.grid[x][y]     access a tile in a grid at the specified x and y position
+    
+    x can be {0...number_of_columns - 1} (from top to bottom)
+    y can be {0...number_of_rows - 1} (from left to right)
+
+    Accessing tile_type
+    Useful property of tile: tile_type (can be 0, 1, 2, 3 or 4)
+    0: dirt
+    1: grass
+    2: water
+    3: crop
+    4: tree
+
+    Example: do something if tile downwards from farmer is a crop
+        if farm.grid[farmer.x][farmer.y + 1].tile_type == 3:
+            # DO SOMETHING
+
+    Accessing crop_type
+    Useful property of tile: crop_type (can be 0, 1, 2)
+    0: potato
+    1: carrot
+    2: pumpkin
+
+    Example: do something if tile downwards from farmer is a carrot
+        if farm.grid[farmer.x][farmer.y + 1].crop_type == 1:
+            # DO SOMETHING
