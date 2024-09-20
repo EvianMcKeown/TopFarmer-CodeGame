@@ -1,0 +1,97 @@
+#possible level solutions. For demo purposes
+###LVL1
+for i in range(5):
+	farmer.move("right")
+	farmer.plant("potato","left")
+###LVL2
+for i in range(4):
+	farmer.plant("carrot","down")
+	farmer.move("right")
+	farmer.plant("pumpkin","down")
+	farmer.move("right")
+
+###LVL3
+for i in range(9):
+	farmer.move("down")
+	if farm.grid[farmer.x+1][farmer.y].tile_type==0:
+		farmer.plant("pumpkin", "right")
+		farmer.move("right")
+	else:
+		farmer.move("right")
+for i in range(9):
+	farmer.move("up")
+for i in range(9):
+	farmer.move("down")
+	if farm.grid[farmer.x-1][farmer.y].tile_type==0:
+		farmer.plant("potato", "left")
+		farmer.move("left")
+	else:
+		farmer.move("left")
+
+
+###LVL4
+while farm.grid[farmer.x][farmer.y+2].tile_type==0:
+	farmer.move("down")
+for i in range(10):
+		farmer.plant("pumpkin","down")
+		farmer.move("right")
+
+###LVL5
+while farm.grid[farmer.x][farmer.y+1].tile_type==0:
+	farmer.move("down")
+for i in range(10):
+	if farm.grid[farmer.x][farmer.y+1].crop_type == 2:
+		farmer.harvest("down")
+		farmer.plant("carrot","down")
+		farmer.move("right")
+	else:
+		farmer.move("right")
+
+###LVL6
+for y in range(9):
+	if y%2 ==0:
+		for x in range(9):
+			if farm.grid[x][y+1].tile_type == 3:
+				farmer.harvest("down")
+			if x<9:
+				farmer.move("right")
+		if y<9:
+			farmer.move("down")
+	else:
+		for x in range(9,-1,-1):
+			if farm.grid[x][y+1].tile_type == 3:
+				farmer.harvest("down")
+			if x>0:
+				farmer.move("left")
+		if y<9:
+			farmer.move("down")
+
+
+###LVL7 
+hardcode or use lvl 8 solution 
+
+###LVL8 no hardcode (set to slow mode first)
+x = 0
+y = 0
+maxCount = 0
+for i in range(10):
+	for j in range(10):
+		count = 0
+		if i<9:
+			temp = i
+			while farm.grid[temp][j].tile_type == 0:
+				count += 1
+				temp += 1
+				if temp>9:
+					break
+		if count > maxCount:
+			maxCount = count
+			x = i
+			y = j
+for i in range(x):
+	farmer.move("right")
+for i in range(y-1):
+	farmer.move("down")
+for i in range(maxCount):
+	farmer.plant("carrot", "down")
+	farmer.move("right")
