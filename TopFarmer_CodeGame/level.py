@@ -227,7 +227,7 @@ class Levels:
 
     def check_level_1_completion(self, farm_stats):
         # Check if 5 potatoes are planted in a row/col
-        return farm_stats.check_crops_in_row(5, 0)
+        return farm_stats.check_crops_in_row(5, 0) and farm_stats.count_crops(0) == 5
 
     def check_level_2_completion(self, farm_stats):
         # check for 4 carrots and 4 pumpkins in an alternating pattern.
